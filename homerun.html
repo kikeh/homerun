@@ -1,140 +1,168 @@
 <head>
-    <title>Homerun</title>
-    <!-- Latest compiled and minified CSS -->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
+  <title>Homerun</title>
+  <!-- Latest compiled and minified CSS -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
 </head>
 
 <body>
-    
-    <!-- Scripts -->
-    <!-- Latest compiled and minified JavaScript -->
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
+  
+  <!-- Scripts -->
+  <!-- Latest compiled and minified JavaScript -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
 </body>
 
 
 
 <template name="layout">
-    <header>
-        {{> nav }}
-    </header>
-    <div class="row">
-        <div class="col-lg-2"></div>
-        <div class="col-lg-8">
-            <div class="container">
-                {{> yield}}
-            </div>
-        </div>
-        <div class="col-lg-2"></div>
+  <header>
+    {{> nav }}
+  </header>
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+      <div class="container">
+        {{> yield}}
+      </div>
     </div>
+    <div class="col-lg-2"></div>
+  </div>
 </template>
 
 <template name="nav">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Homerun</a>
-            </div>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Homerun</a>
+      </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="addExpense">Añadir</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menú<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/addExpense">Añadir</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menú<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+              <li class="divider"></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</template>
+
+<template name="loading">
 </template>
 
 <template name="home">
-    <h1>Homerun</h1>
-    <a href="expenses">Ir a gastos</a>
+  <h1>Homerun</h1>
+  <a href="expenses">Ir a gastos</a>
 </template>
 
 <template name="addExpense">
-    <div class="col-xs-3"></div>
-    <div class="col-xs-6">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-6">
     <form class="form add-expense-form" role="form">
-        <h2>Añadir gasto</h2>
-        <label>Descripción</label>
-        <input type="text" name="expense-description" class="form-control" placeholder="Descripción" />
-        
-        <label>Categoría</label>
-        <input type="text" name="expense-category" class="form-control" placeholder="Categoría" />
-        
-        <label>Cantidad</label>
-        <input type="text" name="expense-amount" class="form-control" placeholder="0,00" />
-        
-        <label>Fecha</label>
-        <input type="text" name="expense-date" class="form-control" id="datepicker">
-        <button class="btn btn-md btn-block btn-primary" id="add-expense">Añadir</button>
+      <h2>Añadir gasto</h2>
+      <label>Descripción</label>
+      <input type="text" name="expense-description" class="form-control" placeholder="Descripción" />
+      
+      <label>Categoría</label>
+      <input type="text" name="expense-category" class="form-control" placeholder="Categoría" />
+      
+      <label>Cantidad</label>
+      <input type="text" name="expense-amount" class="form-control" placeholder="0,00" />
+      
+      <label>Fecha</label>
+      <input type="text" name="expense-date" class="form-control" id="datepicker">
+      <button class="btn btn-md btn-block btn-primary" id="add-expense">Añadir</button>
     </form>
-    </div>
-    <div class="col-xs-3"></div>    
+  </div>
+  <div class="col-xs-3"></div>    
 </template>
 
 <template name="expenses">
-    <h2>Gastos</h2>
-    <h3>{{ total }}</h3>
+  <h2>Gastos</h2>
+  {{#each years}}
+  <table class="expenses">
+    <thead>
+      <tr>
+        <th class="left">Año</th>
+        <th class="right">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="even hoverable">
+        <td width="50%">
+          {{years}}
+        </td>
+        <td width="50%" align="right">{{amount}} €</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td class="total" align="right">{{totalExpensesAmount}} €</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+  {{/each}}
 </template>
 
 <template name="expensesByYear">
-    <h2>Gastos {{ year }}</h2>
-    <h3>{{ total }}</h3>
+  <h2>Gastos {{ year }}</h2>
+  <h3>{{ total }}</h3>
 </template>
 
 <template name="expensesByMonth">
-    <h2>Gastos {{ month }}/{{ year }}</h2>
-    <h3>{{ total }}</h3>
-    <table class="expenses">
-      <thead>
-        <tr>
-          <th class="left">Concepto</th>
-          <th class="right">Cantidad</th>
-          <th class="right">Fecha</th>
-          <th class="right">Categoría</th>
-        </tr>
-      </thead>
-      <tbody>
-          {{#each expensesInMonth}}
-          <tr class="{{#if even}}even {{else}}odd {{/if}} hoverable">
-              <td width="35%">
-                  <a href="{{expense.get_absolute_url}}">
-                      {{description}}
-                  </a>
-              </td>
-              <td width="15%" align="right">{{amount}} €</td>
-              <td width="15%" align="right">{{formatDate date}}</td>
-              <td width="35%" align="right">{{category}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td></td>
-          <td class="total">TOTAL</td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
+  <h2>Gastos {{ month }}/{{ year }}</h2>
+  <h3>{{ total }}</h3>
+  <table class="expenses">
+    <thead>
+      <tr>
+        <th class="left">Concepto</th>
+        <th class="right">Cantidad</th>
+        <th class="right">Fecha</th>
+        <th class="right">Categoría</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each expensesInMonth}}
+      <tr class="{{#if even}}even {{else}}odd {{/if}} hoverable">
+        <td width="35%">
+          <a href="{{expense.get_absolute_url}}">
+            {{description}}
+          </a>
+        </td>
+        <td width="15%" align="right">{{amount}} €</td>
+        <td width="15%" align="right">{{formatDate date}}</td>
+        <td width="35%" align="right">{{category}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td class="total" align="right">{{totalExpensesAmount}} €</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
 </template>

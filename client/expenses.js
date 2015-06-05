@@ -3,8 +3,15 @@ if (Meteor.isClient) {
     Template.registerHelper('formatDate', function(date) {
         return moment(date).format('DD-MM-YYYY');
     });
-    
+
     Template.expenses.helpers({
+        years: function() {
+            var distinctEntries = _.uniq(Expenses.find({}, { sort: {'year': 1}, fields: {'year': true} }).fetch().map(function(x) {
+                return x.myField;
+            }), true);
+            console.log(distinctEntries);
+            return distinctEntries;
+        },
         total: function() {
             return Expenses.find().count();
         },
@@ -12,10 +19,8 @@ if (Meteor.isClient) {
 
     Template.expensesByYear.helpers({
         total: function() {
-            var startYear = 1900;
-            var year = this.year - startYear;
-            var query = 'this.date.getYear() == ' + year;
-            var total = Expenses.find({$where : query }).count();
+            var year = this.year;
+            var total = Expenses.find({'year' : year }).count();
             if(total == 0)
                 total = "No se han encontrado resultados para este año."
             return total;
@@ -24,23 +29,37 @@ if (Meteor.isClient) {
 
     Template.expensesByMonth.helpers({
         total: function() {
-            var startYear = 1900;
-            var year = this.year - startYear;
-            var month = this.month - 1;
-            var query = 'this.date.getYear() == ' + year + '&& this.date.getMonth() == ' + month;
-            var total = Expenses.find({$where : query }).count();
+            var year = this.year;
+            var month = this.month;
+            var total = Expenses.find({'month' : month, 'year' : year}).count();
             if(total == 0)
                 total = "No se han encontrado resultados para este mes."
             return total;
         },
 
-        expensesInMonth: function() {
-            var startYear = 1900;
-            var year = this.year - startYear;
-            var month = this.month - 1;
-            var query = 'this.date.getYear() == ' + year + '&& this.date.getMonth() == ' + month;
+        totalExpensesAmount: function() {
+            var year = this.year;
+            var month = this.month;
             var total = [];
-            Expenses.find({$where : query }).forEach(function(p, index) {
+            var expenses = Expenses.find({'month' : month, 'year' : year});
+            expenses.forEach(function(p, index) {
+                p.position = index;
+                total.push(p)
+            });
+
+            var total = 0;
+            expenses.forEach(function(e) {
+                total = total + e.amount;
+            });
+            return total;
+        },
+        
+        expensesInMonth: function() {
+            var year = this.year;
+            var month = this.month;
+            var total = [];
+            var expenses = Expenses.find({'month' : month, 'year' : year});
+            expenses.forEach(function(p, index) {
                 p.position = index;
                 total.push(p)
             });

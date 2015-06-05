@@ -12,6 +12,17 @@ if (Meteor.isClient) {
     });
 
     Router.route('/addExpense');
+    
+    Router.route('/add/:_type', function() {
+        var type = this.params._type;
+        if(type == "expense" || type == "income") {
+            this.render('addTransaction', { data: { type: type } });
+        }
+        else {
+            this.render('404');
+        }
+                
+    });
 
     Router.route('/expenses');
 

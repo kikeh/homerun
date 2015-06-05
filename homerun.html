@@ -46,17 +46,11 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="/">Home</a></li>
-          <li><a href="/addExpense">Añadir</a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menú<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Añadir<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
-              <li class="divider"></li>
-              <li><a href="#">One more separated link</a></li>
+              <li><a href="/add/expense">Gasto</a></li>
+              <li><a href="/add/income">Ingreso</a></li>
             </ul>
           </li>
         </ul>
@@ -73,6 +67,11 @@
   <a href="expenses">Ir a gastos</a>
 </template>
 
+<template name="404">
+    <h1>404</h1>
+    <h2>La página que buscas no existe</h2>
+</template>
+
 <template name="addExpense">
   <div class="col-xs-3"></div>
   <div class="col-xs-6">
@@ -86,6 +85,40 @@
       
       <label>Cantidad</label>
       <input type="text" name="expense-amount" class="form-control" placeholder="0,00" />
+
+      <label>Tipo</label>
+      <select id="type" class="form-control">
+          <option value="Variable">Variable</option>
+          <option value="Fijo">Fijo</option>
+      </select>
+      
+      <label>Fecha</label>
+      <input type="text" name="expense-date" class="form-control" id="datepicker">
+      <button class="btn btn-md btn-block btn-primary" id="add-expense">Añadir</button>
+    </form>
+  </div>
+  <div class="col-xs-3"></div>    
+</template>
+
+<template name="addTransaction">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-6">
+    <form class="form add-expense-form" role="form">
+      <h2>Añadir {{type}}</h2>
+      <label>Descripción</label>
+      <input type="text" name="expense-description" class="form-control" placeholder="Descripción" />
+      
+      <label>Categoría</label>
+      <input type="text" name="expense-category" class="form-control" placeholder="Categoría" />
+      
+      <label>Cantidad</label>
+      <input type="text" name="expense-amount" class="form-control" placeholder="0,00" />
+
+      <label>Tipo</label>
+      <select id="type" class="form-control">
+          <option value="Variable">Variable</option>
+          <option value="Fijo">Fijo</option>
+      </select>
       
       <label>Fecha</label>
       <input type="text" name="expense-date" class="form-control" id="datepicker">

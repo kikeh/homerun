@@ -9,8 +9,9 @@ if (Meteor.isClient) {
         var data = {
             'description' : formArray[0].value,
             'category'    : formArray[1].value,
-            'amount'      : Number(formArray[2].value.replace(",",".")),
+            'amount'      : formArray[2].value,
             'type'        : formArray[3].value,
+            'date'        : new Date(year,month-1,day),
             'year'        : year,
             'month'       : month,
             'day'         : day,
@@ -27,7 +28,7 @@ if (Meteor.isClient) {
             swal("Error", "Fecha no válida", "error");
             valid = false;
         }
-        else if(data.amount <= 0 || !(/^(\d+(.\d{2})?)$/.test(data.amount))) {
+        else if(!(/^(\d+(,\d{2})?)$/.test(data.amount))) {
             swal("Error", "Cantidad no válida", "error");
             valid = false;
         }

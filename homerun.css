@@ -124,3 +124,7 @@ tr {
 .negative {
   background: #f5d5d5;
 }
+
+.container {
+    width: 100%;
+}

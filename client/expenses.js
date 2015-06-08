@@ -25,14 +25,65 @@ if (Meteor.isClient) {
                 total = "No se han encontrado resultados para este año."
             return total;
         },
-    });
 
-    ex = function(month, year) {
-        var expenses = Expenses.find({'month' : '06', 'year' : '2015'}).fetch();
-        return expenses;
-    };
+        empty: function() {
+            var year = this.year;
+            var total = Expenses.find({'year' : year}).count();
+            return total == 0;
+        },
+
+        yearExpenses: function() {
+            var year  = this.year;
+            return function() {
+                var expenses = Expenses.find({'year' : year}).fetch();
+                return expenses;
+            };
+        },
+
+        yearExpensesOptions: function() {
+            var optionsObject = {
+                bFilter: false,
+                bInfo: false,
+                bPaginate: false,
+                className: 'compact',
+                'order': [[2, 'asc']],
+                "columnDefs": [
+                    {
+                        "render": function ( data, type, row ) {
+                            return moment(data).format('YYYY-MM-DD');
+                        },
+                        "targets": 2
+                    }],
+                columns: [{
+                    title: 'Descripción',
+                    data: 'description',
+                },{
+                    title: 'Categoría',
+                    data: 'category'
+                },{
+                    title: 'Fecha',
+                    data: 'date',
+                    type: 'string'
+                },{
+                    title: 'Cantidad (€)',
+                    data: 'amount',
+                    type: "num-fmt",
+                    className: 'right'
+                }]
+            }
+            return optionsObject;
+        },
+
+    });
     
-    Template.expensesByMonth.helpers({        
+    Template.expensesByMonth.helpers({
+        empty: function() {
+            var year = this.year;
+            var month = this.month;
+            var total = Expenses.find({'month' : month, 'year' : year}).count();
+            return total == 0;
+        },
+        
         total: function() {
             var year = this.year;
             var month = this.month;
@@ -42,37 +93,13 @@ if (Meteor.isClient) {
             return total;
         },
 
-        totalExpensesAmount: function() {
-            var year = this.year;
-            var month = this.month;
-            var total = [];
-            var expenses = Expenses.find({'month' : month, 'year' : year});
-            expenses.forEach(function(p, index) {
-                p.position = index;
-                total.push(p)
-            });
-
-            var total = 0;
-            expenses.forEach(function(e) {
-                total = total + e.amount;
-            });
-            return total;
-        },
-        
-        expensesInMonth: function() {
-            var year = this.year;
-            var month = this.month;
-            var total = [];
-            var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
-            expenses.forEach(function(p, index) {
-                p.position = index;
-                total.push(p)
-            });
-            return total;
-        },
-
         monthExpenses: function() {
-            return ex('06','2015');
+            var month = this.month;
+            var year  = this.year;
+            return function() {
+                var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
+                return expenses;
+            };
         },
 
         monthExpensesOptions: function() {
@@ -80,27 +107,85 @@ if (Meteor.isClient) {
                 bFilter: false,
                 bInfo: false,
                 bPaginate: false,
+                className: 'compact',
+                'order': [[2, 'asc']],
                 columns: [{
                     title: 'Descripción',
-                    data: 'description'
+                    data: 'description',
                 },{
                     title: 'Categoría',
                     data: 'category'
                 },{
-                    title: 'Cantidad',
+                    title: 'Fecha',
+                    data: 'date',
+                    type: 'date'
+                },{
+                    title: 'Cantidad (€)',
                     data: 'amount',
+                    type: "num-fmt",
+                    className: 'right'
                 }]
             }
             return optionsObject;
         },
+
+        // totalExpensesAmount: function() {
+        //     var year = this.year;
+        //     var month = this.month;
+        //     var total = [];
+        //     var expenses = Expenses.find({'month' : month, 'year' : year});
+        //     expenses.forEach(function(p, index) {
+        //         p.position = index;
+        //         total.push(p)
+        //     });
+
+        //     var total = 0;
+        //     expenses.forEach(function(e) {
+        //         total = total + e.amount;
+        //     });
+        //     return total;
+        // },
         
-        odd: function() {
-            return !(this.position % 2 === 0);
-        },
+        // expensesInMonth: function() {
+        //     var year = this.year;
+        //     var month = this.month;
+        //     var total = [];
+        //     var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
+        //     expenses.forEach(function(p, index) {
+        //         p.position = index;
+        //         total.push(p)
+        //     });
+        //     return total;
+        // },
         
-        even: function() {
-            return (this.position % 2 === 0);
+        monthName: function() {
+            var month = this.month;
+            if(month == '01')
+                return 'Enero';
+            else if(month == '02')
+                return 'Febrero';
+            else if(month == '03')
+                return 'Marzo';
+            else if(month == '04')
+                return 'Abril';
+            else if(month == '05')
+                return 'Mayo';
+            else if(month == '06')
+                return 'Junio';
+            else if(month == '07')
+                return 'Julio';
+            else if(month == '08')
+                return 'Agosto';
+            else if(month == '09')
+                return 'Septiembre ';
+            else if(month == '10')
+                return 'Octubre';
+            else if(month == '11')
+                return 'Noviembre';
+            else if(month == '12')
+                return 'Diciembre';
         }
+        
     });
     
 }

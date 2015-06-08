@@ -102,7 +102,7 @@
 <template name="expenses">
   <h2>Gastos</h2>
   {{#each years}}
-  <table class="expenses">
+  <table class="expenses hover">
     <thead>
       <tr>
         <th class="left">Año</th>
@@ -132,12 +132,15 @@
 <template name="expensesByYear">
   <h2>Gastos {{ year }}</h2>
   <h3>{{ total }}</h3>
+  {{#unless empty}}
+  {{> ReactiveDatatable tableData=yearExpenses options=yearExpensesOptions }}
+  {{/unless}}
 </template>
 
 <template name="expensesByMonth">
-  <h2>Gastos {{ month }}/{{ year }}</h2>
+  <h2>Gastos {{ monthName }} <a href="/expenses/{{year}}">{{ year }}</a></h2>
   <h3>{{ total }}</h3>
-
+  {{#unless empty}}
   {{> ReactiveDatatable tableData=monthExpenses options=monthExpensesOptions }}
-  
+  {{/unless}}
 </template>

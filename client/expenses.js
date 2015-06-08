@@ -3,7 +3,7 @@ if (Meteor.isClient) {
     Template.registerHelper('formatDate', function(date) {
         return moment(date).format('DD-MM-YYYY');
     });
-
+    
     Template.expenses.helpers({
         years: function() {
             var distinctEntries = _.uniq(Expenses.find({}, { sort: {'year': 1}, fields: {'year': true} }).fetch().map(function(x) {
@@ -27,7 +27,12 @@ if (Meteor.isClient) {
         },
     });
 
-    Template.expensesByMonth.helpers({
+    ex = function(month, year) {
+        var expenses = Expenses.find({'month' : '06', 'year' : '2015'}).fetch();
+        return expenses;
+    };
+    
+    Template.expensesByMonth.helpers({        
         total: function() {
             var year = this.year;
             var month = this.month;
@@ -58,7 +63,7 @@ if (Meteor.isClient) {
             var year = this.year;
             var month = this.month;
             var total = [];
-            var expenses = Expenses.find({'month' : month, 'year' : year});
+            var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
             expenses.forEach(function(p, index) {
                 p.position = index;
                 total.push(p)
@@ -66,6 +71,29 @@ if (Meteor.isClient) {
             return total;
         },
 
+        monthExpenses: function() {
+            return ex('06','2015');
+        },
+
+        monthExpensesOptions: function() {
+            var optionsObject = {
+                bFilter: false,
+                bInfo: false,
+                bPaginate: false,
+                columns: [{
+                    title: 'Descripción',
+                    data: 'description'
+                },{
+                    title: 'Categoría',
+                    data: 'category'
+                },{
+                    title: 'Cantidad',
+                    data: 'amount',
+                }]
+            }
+            return optionsObject;
+        },
+        
         odd: function() {
             return !(this.position % 2 === 0);
         },

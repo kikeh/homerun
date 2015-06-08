@@ -11,8 +11,6 @@ if (Meteor.isClient) {
         this.render('home');
     });
 
-    Router.route('/addExpense');
-    
     Router.route('/add/:_type', function() {
         var type = this.params._type;
         if(type == "expense" || type == "income") {
@@ -51,7 +49,8 @@ if (Meteor.isClient) {
     /* Loading */
     
     Router.configure({
-        loadingTemplate: 'loading'
+        loadingTemplate: 'loading',
+        notFoundTemplate: '404'
     });
     
     Template.loading.rendered = function () {

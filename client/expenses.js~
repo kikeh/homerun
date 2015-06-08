@@ -1,9 +1,0 @@
-if (Meteor.isClient) {
-
-    Template.expense.helpers({
-        total: function() {
-            return Expenses.find().count();
-        }
-    });
-    
-}

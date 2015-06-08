@@ -1,4 +1,5 @@
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Homerun</title>
   <!-- Latest compiled and minified CSS -->
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
@@ -72,60 +73,30 @@
     <h2>La página que buscas no existe</h2>
 </template>
 
-<template name="addExpense">
-  <div class="col-xs-3"></div>
-  <div class="col-xs-6">
-    <form class="form add-expense-form" role="form">
-      <h2>Añadir gasto</h2>
-      <label>Descripción</label>
-      <input type="text" name="expense-description" class="form-control" placeholder="Descripción" />
-      
-      <label>Categoría</label>
-      <input type="text" name="expense-category" class="form-control" placeholder="Categoría" />
-      
-      <label>Cantidad</label>
-      <input type="text" name="expense-amount" class="form-control" placeholder="0,00" />
-
-      <label>Tipo</label>
-      <select id="type" class="form-control">
-          <option value="Variable">Variable</option>
-          <option value="Fijo">Fijo</option>
-      </select>
-      
-      <label>Fecha</label>
-      <input type="text" name="expense-date" class="form-control" id="datepicker">
-      <button class="btn btn-md btn-block btn-primary" id="add-expense">Añadir</button>
-    </form>
-  </div>
-  <div class="col-xs-3"></div>    
-</template>
-
 <template name="addTransaction">
-  <div class="col-xs-3"></div>
-  <div class="col-xs-6">
-    <form class="form add-expense-form" role="form">
+  <div class="transaction">
+    <form class="form add-transaction-form" role="form">
       <h2>Añadir {{type}}</h2>
       <label>Descripción</label>
-      <input type="text" name="expense-description" class="form-control" placeholder="Descripción" />
+      <input type="text" name="transaction-description" class="form-control" placeholder="Descripción" />
       
       <label>Categoría</label>
-      <input type="text" name="expense-category" class="form-control" placeholder="Categoría" />
+      <input type="text" name="transaction-category" class="form-control" placeholder="Categoría" />
       
       <label>Cantidad</label>
-      <input type="text" name="expense-amount" class="form-control" placeholder="0,00" />
+      <input type="text" name="transaction-amount" class="form-control" placeholder="0,00" />
 
       <label>Tipo</label>
-      <select id="type" class="form-control">
+      <select id="type" name="transaction-type" class="form-control">
           <option value="Variable">Variable</option>
           <option value="Fijo">Fijo</option>
       </select>
       
       <label>Fecha</label>
-      <input type="text" name="expense-date" class="form-control" id="datepicker">
-      <button class="btn btn-md btn-block btn-primary" id="add-expense">Añadir</button>
+      <input type="text" name="transaction-date" class="form-control" id="datepicker">
+      <button class="btn btn-md btn-block btn-primary" id="add-transaction">Añadir</button>
     </form>
   </div>
-  <div class="col-xs-3"></div>    
 </template>
 
 <template name="expenses">
@@ -166,36 +137,7 @@
 <template name="expensesByMonth">
   <h2>Gastos {{ month }}/{{ year }}</h2>
   <h3>{{ total }}</h3>
-  <table class="expenses">
-    <thead>
-      <tr>
-        <th class="left">Concepto</th>
-        <th class="right">Cantidad</th>
-        <th class="right">Fecha</th>
-        <th class="right">Categoría</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each expensesInMonth}}
-      <tr class="{{#if even}}even {{else}}odd {{/if}} hoverable">
-        <td width="35%">
-          <a href="{{expense.get_absolute_url}}">
-            {{description}}
-          </a>
-        </td>
-        <td width="15%" align="right">{{amount}} €</td>
-        <td width="15%" align="right">{{formatDate date}}</td>
-        <td width="35%" align="right">{{category}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td></td>
-        <td class="total" align="right">{{totalExpensesAmount}} €</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
+
+  {{> ReactiveDatatable tableData=monthExpenses options=monthExpensesOptions }}
+  
 </template>

@@ -13,14 +13,13 @@
 
 /* CSS declarations go here */
 
-.form input {
+.form input, .form select {
     margin: 15px 0;
 }
 
-.form .col-xs-6 {
-    padding-left: 0;
-    clear: both;
-    display: block;
+.transaction {
+    width: 80%;
+    margin: 0 auto;
 }
 
 .details {

@@ -1,15 +1,16 @@
 if (Meteor.isClient) {
 
-    var getExpenseInfo = function() {
-        var formArray = $('.add-expense-form').serializeArray();
-        var expenseDateFigures = formArray[3].value.split("/");
-        var day   = expenseDateFigures[0];
-        var month = expenseDateFigures[1];
-        var year  = expenseDateFigures[2];
+    var getTransactionInfo = function() {
+        var formArray = $('.add-transaction-form').serializeArray();
+        var transactionDateFigures = formArray[4].value.split("/");
+        var day   = transactionDateFigures[0];
+        var month = transactionDateFigures[1];
+        var year  = transactionDateFigures[2];
         var data = {
             'description' : formArray[0].value,
             'category'    : formArray[1].value,
             'amount'      : Number(formArray[2].value.replace(",",".")),
+            'type'        : formArray[3].value,
             'year'        : year,
             'month'       : month,
             'day'         : day,
@@ -53,19 +54,24 @@ if (Meteor.isClient) {
     });
     
     Template.addTransaction.events({
-        'click #add-expense': function (event) {
+        'click #add-transaction': function (event) {
             event.preventDefault();
-            var expenseData = getExpenseInfo();
-            if(dataIsValid(expenseData)){
-                Meteor.call('createExpenseEntry', expenseData,
-                            function(error,result) { 
-                                if(error) {
-                                    console.log('Error: ' + error);
-                                }
-                                else {
-                                    swal("Hecho", "El gasto se ha guardado correctamente","success");
-                                }
-                            });
+            var transactionData = getTransactionInfo();
+            if(dataIsValid(transactionData)){
+                if(this.type == "expense") {
+                    Meteor.call('createExpenseEntry', transactionData,
+                                function(error,result) { 
+                                    if(error) {
+                                        console.log('Error: ' + error);
+                                    }
+                                    else {
+                                        swal("Hecho", "El gasto se ha guardado correctamente","success");
+                                    }
+                                });
+                }
+                else {
+                    swal("Ups!", "Todavía no se pueden crear ingresos","warning");
+                }
             }
         }        
     });
@@ -76,6 +82,11 @@ if (Meteor.isClient) {
             todayBtn: "linked",
             language: "es"
         });
+        $('#datepicker').datepicker('setDate', new Date());
     }
+
+    Template.addTransaction.onRendered(function() {
+        //
+    });
 }
 

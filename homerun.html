@@ -1,86 +1,94 @@
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Homerun</title>
-  <!-- Latest compiled and minified CSS -->
-  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Homerun</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+    
 </head>
 
 <body>
-  
-  <!-- Scripts -->
-  <!-- Latest compiled and minified JavaScript -->
-  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
+    
+    <!-- Scripts -->
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="client/common/jquery.numberformatter-1.2.4.js"></script>
 </body>
 
 
 
 <template name="layout">
-  <header>
-    {{> nav }}
-  </header>
-  <div class="row">
-    <div class="col-lg-2"></div>
-    <div class="col-lg-8">
-      <div class="container">
-        {{> yield}}
-      </div>
+    <header>
+        {{> nav }}
+    </header>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="container">
+                {{> yield}}
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
     </div>
-    <div class="col-lg-2"></div>
-  </div>
 </template>
 
 <template name="nav">
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">Homerun</a>
-      </div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Homerun</a>
+            </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><a href="/">Home</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Movimientos<span class="caret"></span></a>
-            <ul class="dropdown-menu multi-level" role="menu">
-              {{#each years}}
-              <li class="dropdown-submenu">
-                <a href="/balance/{{year}}" class="dropdown-toggle" data-toggle="dropdown">{{year}}</a>
-                <ul class="dropdown-menu">
-                  {{#each months}}
-                  <li><a href="/balance/{{../year}}/{{this}}">{{getMonthName this}}</a></li>
-                  {{/each}}
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Movimientos<span class="caret"></span></a>
+                        <ul class="dropdown-menu multi-level" role="menu">
+                            {{#each years}}
+                            <li class="dropdown-submenu">
+                                <a href="/balance/{{year}}">{{year}}</a>
+                                <ul class="dropdown-menu multi-level" role="menu">
+                                    {{#each months}}
+                                    <li class="dropdown-submenu">
+                                        <a href="/balance/{{../year}}/{{this}}">{{getMonthName this}}</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/expenses/{{../year}}/{{this}}">Gastos</a></li>
+                                            <li><a href="/incomes/{{../year}}/{{this}}">Ingresos</a></li>
+                                        </ul>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Añadir<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/add/expense">Gasto</a></li>
+                            <li><a href="/add/income">Ingreso</a></li>
+                        </ul>
+                    </li>
                 </ul>
-              </li>
-              {{/each}}
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Añadir<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="/add/expense">Gasto</a></li>
-              <li><a href="/add/income">Ingreso</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
 </template>
 
 <template name="loading">
 </template>
 
 <template name="home">
-  <h1>Homerun</h1>
-  <a href="expenses">Ir a gastos</a>
+    <h1>Homerun</h1>
+    <a href="expenses">Ir a gastos</a>
 </template>
 
 <template name="404">
@@ -89,119 +97,216 @@
 </template>
 
 <template name="addTransaction">
-  <div class="transaction">
-    <form class="form add-transaction-form" role="form">
-      <h2>Añadir {{type}}</h2>
-      <label>Descripción</label>
-      <input type="text" name="transaction-description" class="form-control" placeholder="Descripción" />
-      
-      <label>Categoría</label>
-      <input type="text" name="transaction-category" class="form-control" placeholder="Categoría" />
-      
-      <label>Cantidad</label>
-      <input type="text" name="transaction-amount" class="form-control" placeholder="0,00" />
+    <div class="transaction">
+        <form class="form add-transaction-form" role="form">
+            <h2>Añadir {{type}}</h2>
+            <label>Descripción</label>
+            <input type="text" name="transaction-description" class="form-control" placeholder="Descripción" />
+            
+            <label>Categoría</label>
+            <input type="text" name="transaction-category" class="form-control" placeholder="Categoría" />
+            
+            <label>Cantidad</label>
+            <input type="text" name="transaction-amount" class="form-control" placeholder="0,00" />
 
-      <label>Tipo</label>
-      <select id="type" name="transaction-type" class="form-control">
-          <option value="Variable">Variable</option>
-          <option value="Fijo">Fijo</option>
-      </select>
-      
-      <label>Fecha</label>
-      <input type="text" name="transaction-date" class="form-control" id="datepicker">
-      <button class="btn btn-md btn-block btn-primary" id="add-transaction">Añadir</button>
-    </form>
-  </div>
+            <label>Tipo</label>
+            <select id="type" name="transaction-type" class="form-control">
+                <option value="Variable">Variable</option>
+                <option value="Fijo">Fijo</option>
+            </select>
+            
+            <label>Fecha</label>
+            <input type="text" name="transaction-date" class="form-control" id="datepicker">
+            <button class="btn btn-md btn-block btn-primary" id="add-transaction">Añadir</button>
+        </form>
+    </div>
 </template>
 
 <template name="expenses">
-  <h2>Gastos</h2>
-  {{#each years}}
-  <table class="expenses hover">
-    <thead>
-      <tr>
-        <th class="left">Año</th>
-        <th class="right">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="even hoverable">
-        <td width="50%">
-          {{years}}
-        </td>
-        <td width="50%" align="right">{{amount}} €</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td></td>
-        <td class="total" align="right">{{totalExpensesAmount}} €</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
-  {{/each}}
+    <h4>Gastos</h4>
+    {{#each years}}
+    <table class="expenses hover">
+        <thead>
+            <tr>
+                <th class="left">Año</th>
+                <th class="right">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="even hoverable">
+                <td width="50%">
+                    {{years}}
+                </td>
+                <td width="50%" align="right">{{amount}} €</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td class="total" align="right">{{totalExpensesAmount}} €</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    {{/each}}
 </template>
 
 <template name="expensesByYear">
-  <h2>Gastos {{ year }}</h2>
-  <h3>{{ total }}</h3>
-  {{#unless empty}}
-  {{> ReactiveDatatable tableData=yearExpenses options=yearExpensesOptions }}
-  {{/unless}}
+    <h4>Gastos {{ year }}</h4>
+    {{#unless empty}}
+    {{! > ReactiveDatatable tableData=yearExpenses options=yearExpensesOptions }}
+    {{> tableExpenses yearExpenses=yearExpenses}}
+    {{/unless}}
 </template>
 
 <template name="expensesByMonth">
-  <h2>Gastos {{ monthName }} <a href="/expenses/{{year}}">{{ year }}</a></h2>
-  <h3>{{ total }}</h3>
-  {{#unless empty}}
-  {{> ReactiveDatatable tableData=monthExpenses options=monthExpensesOptions }}
-  {{/unless}}
+    <h4>Gastos {{ monthName }} <a href="/expenses/{{year}}">{{ year }}</a></h4>
+    {{#unless empty}}
+    {{> ReactiveDatatable tableData=monthExpenses options=monthExpensesOptions }}
+    {{/unless}}
 </template>
 
 <template name="incomes">
-  <h2>Gastos</h2>
-  {{#each years}}
-  <table class="incomes hover">
-    <thead>
-      <tr>
-        <th class="left">Año</th>
-        <th class="right">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="even hoverable">
-        <td width="50%">
-          {{years}}
-        </td>
-        <td width="50%" align="right">{{amount}} €</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td></td>
-        <td class="total" align="right">{{totalIncomesAmount}} €</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
-  {{/each}}
+    <h4>Gastos</h4>
+    {{#each years}}
+    <table class="incomes hover">
+        <thead>
+            <tr>
+                <th class="left">Año</th>
+                <th class="right">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="even hoverable">
+                <td width="50%">
+                    {{years}}
+                </td>
+                <td width="50%" align="right">{{amount}} €</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td class="total" align="right">{{totalIncomesAmount}} €</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    {{/each}}
 </template>
 
 <template name="incomesByYear">
-  <h2>Ingresos {{ year }}</h2>
-  <h3>{{ total }}</h3>
-  {{#unless empty}}
-  {{> ReactiveDatatable tableData=yearIncomes options=yearIncomesOptions }}
-  {{/unless}}
+    <h4>Ingresos {{ year }}</h4>
+    {{#unless empty}}
+    {{> ReactiveDatatable tableData=yearIncomes options=yearIncomesOptions }}
+    {{/unless}}
 </template>
 
 <template name="incomesByMonth">
-  <h2>Ingresos {{ monthName }} <a href="/incomes/{{year}}">{{ year }}</a></h2>
-  <h3>{{ total }}</h3>
-  {{#unless empty}}
-  {{> ReactiveDatatable tableData=monthIncomes options=monthIncomesOptions }}
-  {{/unless}}
+    <h4>Ingresos {{ monthName }} <a href="/incomes/{{year}}">{{ year }}</a></h4>
+    {{#unless empty}}
+    {{> ReactiveDatatable tableData=monthIncomes options=monthIncomesOptions }}
+    {{/unless}}
+</template>
+
+<template name="balance">
+    <h4>Gastos</h4>
+    {{#each years}}
+    <table class="balance hover">
+        <thead>
+            <tr>
+                <th class="left">Año</th>
+                <th class="right">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="even hoverable">
+                <td width="50%">
+                    {{years}}
+                </td>
+                <td width="50%" align="right">{{amount}} €</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td class="total" align="right">{{totalBalanceAmount}} €</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    {{/each}}
+</template>
+
+<template name="balanceByYear">
+    <div class="row">
+        <h2>Balance {{year}}</h2>
+    </div>
+    <div class="row">
+        {{> expensesByYear}}
+    </div>
+    <div class="row">
+        {{> incomesByYear}}
+    </div>
+</template>
+
+<template name="balanceByMonth">
+    <div class="row">
+        <h2>Balance {{monthName}} <a href="/balance/{{year}}">{{year}}</a></h2>
+    </div>
+    <div class="row">
+        {{> expensesByMonth}}
+    </div>
+    <div class="row">
+        {{> incomesByMonth}}
+    </div>
+</template>
+
+<template name="tableExpenses">
+    <table class="expenses stripe hover compact">
+        <thead>
+            <tr>
+                <th>
+                    Descripción
+                </th>
+                <th>
+                    Categoría
+                </th>
+                <th>
+                    Fecha
+                </th>
+                <th class="right">
+                    Cantidad (€)
+                </th>
+                <th class="right">
+                    % gasto
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th class="right">
+                    Total
+                </th>
+                <th class="right"></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {{#each yearExpenses}}
+            <tr>
+                <td>{{this.description}}</td>
+                <td>{{this.category}}</td>
+                <td>{{this.date}}</td>
+                <td class="right">{{this.amount}}</td>
+                <td class="right">{{this.amount}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </template>

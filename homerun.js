@@ -3,6 +3,8 @@ Expenses = new Mongo.Collection("expenses");
 
 if (Meteor.isClient) {
 
+    /* ROUTER */
+    
     Router.configure({
         layoutTemplate: 'layout'  //can be any template name
     });
@@ -70,8 +72,30 @@ if (Meteor.isClient) {
         }
     });
 
-    
-    /* Loading */
+    Router.route('/balance');
+
+    Router.route('balanceByYear', {
+        path: '/balance/:_year',
+        data: function() {
+            _year = this.params._year;
+            templateData = {
+                year : _year,
+            };
+            return templateData;
+        }
+    });
+
+    Router.route('balanceByMonth', {
+        path: '/balance/:_year/:_month',
+        data: function() {
+            templateData = {
+                year  : this.params._year,
+                month : this.params._month
+            };
+            return templateData;
+        }
+    });
+
     
     Router.configure({
         loadingTemplate: 'loading',
@@ -97,6 +121,8 @@ if (Meteor.isClient) {
 
     var message = '<p class="loading-message">Loading Message</p>';
     var spinner = '<div class="sk-spinner sk-spinner-rotating-plane"></div>';
+
+    /* Basic templates */
     
     Template.home.helpers({
         counter: function () {

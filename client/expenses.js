@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
 
     Template.registerHelper('formatDate', function(date) {
-        return moment(date).format('DD-MM-YYYY');
+        return moment(date).format('YYYY');
     });
     
     Template.expenses.helpers({
@@ -17,12 +17,64 @@ if (Meteor.isClient) {
         },
     });
 
+    Template.expensesByYear.rendered = function() {
+        numeral.language('es', {
+            delimiters: {
+                thousands: '',
+                decimal: ','
+            }
+        });
+        
+        $('table').dataTable( {
+            "paging":   false,
+            "info":     false,
+            "filter": false,
+            "order": [[2, 'asc']],
+            "columnDefs": [
+                {
+                    "render": function ( data, type, row ) {
+                        return moment(data).format('YYYY-MM-DD');
+                    },
+                    "targets": 2
+                }],
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(',','.')*1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                var total = 0;
+                
+                if(api.column(3).data().length) {
+                    total = api
+                        .column( 3 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        } );
+                }
+                console.log(total);
+                // Update footer
+                $( api.column( 3 ).footer() ).html(
+                    numeral(total).format('0[.]00 €')
+                );
+            }
+        } );
+    };
+    
     Template.expensesByYear.helpers({
-        total: function() {
+        totalAmount: function() {
             var year = this.year;
-            var total = Expenses.find({'year' : year }).count();
-            if(total == 0)
-                total = "No se han encontrado resultados para este año."
+            var expenses = Expenses.find({'year' : year });
+            var total = 0;
+            _.each(expenses, function(expense) {
+                total = total + expense.amount;
+            });
             return total;
         },
 
@@ -34,10 +86,11 @@ if (Meteor.isClient) {
 
         yearExpenses: function() {
             var year  = this.year;
-            return function() {
-                var expenses = Expenses.find({'year' : year}).fetch();
-                return expenses;
-            };
+            // return function() {
+            //     var expenses = Expenses.find({'year' : year}).fetch();
+            //     return expenses;
+            // };
+            return Expenses.find({'year' : year}).fetch();
         },
 
         yearExpensesOptions: function() {
@@ -107,7 +160,7 @@ if (Meteor.isClient) {
                 bFilter: false,
                 bInfo: false,
                 bPaginate: false,
-                className: 'compact',
+                className: 'compact hover stripes',
                 'order': [[2, 'asc']],
                 'order': [[2, 'asc']],
                 "columnDefs": [
@@ -116,6 +169,11 @@ if (Meteor.isClient) {
                             return moment(data).format('YYYY-MM-DD');
                         },
                         "targets": 2
+                    },{
+                        "render": function(data,type,row) {
+                            return (Number(data.replace(",","."))*100/1500) + ' %';
+                        },
+                        "targets": 4
                     }],
                 columns: [{
                     title: 'Descripción',
@@ -132,7 +190,35 @@ if (Meteor.isClient) {
                     data: 'amount',
                     type: "num-fmt",
                     className: 'right'
-                }]
+                },{
+                    title: '% gasto',
+                    data: 'amount',
+                    className: 'right'
+                }],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+                    
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return Number(i.replace(',','.'));
+                    };
+
+                    var total = 0;
+                    
+                    if(api.column(3).data().length) {
+                        total = api
+                            .column( 3 )
+                            .data()
+                            .reduce( function (a, b) {
+                                return intVal(a) + intVal(b);
+                            } );
+                    }
+                    console.log(total);
+                    // Update footer
+                    $( api.column( 3 ).footer() ).html(
+                        total + ' €'
+                    );
+                }
             }
             return optionsObject;
         },

@@ -40,13 +40,28 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Homerun</a>
+        <a class="navbar-brand" href="/">Homerun</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="/">Home</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Movimientos<span class="caret"></span></a>
+            <ul class="dropdown-menu multi-level" role="menu">
+              {{#each years}}
+              <li class="dropdown-submenu">
+                <a href="/balance/{{year}}" class="dropdown-toggle" data-toggle="dropdown">{{year}}</a>
+                <ul class="dropdown-menu">
+                  {{#each months}}
+                  <li><a href="/balance/{{../year}}/{{this}}">{{getMonthName this}}</a></li>
+                  {{/each}}
+                </ul>
+              </li>
+              {{/each}}
+            </ul>
+          </li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Añadir<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
@@ -142,5 +157,51 @@
   <h3>{{ total }}</h3>
   {{#unless empty}}
   {{> ReactiveDatatable tableData=monthExpenses options=monthExpensesOptions }}
+  {{/unless}}
+</template>
+
+<template name="incomes">
+  <h2>Gastos</h2>
+  {{#each years}}
+  <table class="incomes hover">
+    <thead>
+      <tr>
+        <th class="left">Año</th>
+        <th class="right">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="even hoverable">
+        <td width="50%">
+          {{years}}
+        </td>
+        <td width="50%" align="right">{{amount}} €</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td class="total" align="right">{{totalIncomesAmount}} €</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+  {{/each}}
+</template>
+
+<template name="incomesByYear">
+  <h2>Ingresos {{ year }}</h2>
+  <h3>{{ total }}</h3>
+  {{#unless empty}}
+  {{> ReactiveDatatable tableData=yearIncomes options=yearIncomesOptions }}
+  {{/unless}}
+</template>
+
+<template name="incomesByMonth">
+  <h2>Ingresos {{ monthName }} <a href="/incomes/{{year}}">{{ year }}</a></h2>
+  <h3>{{ total }}</h3>
+  {{#unless empty}}
+  {{> ReactiveDatatable tableData=monthIncomes options=monthIncomesOptions }}
   {{/unless}}
 </template>

@@ -46,6 +46,31 @@ if (Meteor.isClient) {
         }
     });
 
+    Router.route('/incomes');
+
+    Router.route('incomesByYear', {
+        path: '/incomes/:_year',
+        data: function() {
+            _year = this.params._year;
+            templateData = {
+                year : _year,
+            };
+            return templateData;
+        }
+    });
+
+    Router.route('incomesByMonth', {
+        path: '/incomes/:_year/:_month',
+        data: function() {
+            templateData = {
+                year  : this.params._year,
+                month : this.params._month
+            };
+            return templateData;
+        }
+    });
+
+    
     /* Loading */
     
     Router.configure({
@@ -95,6 +120,12 @@ if (Meteor.isServer) {
         },
         'getExpensesByYear' : function(year) {
             return Expenses.find({$where : 'return this.date.getYear() == 115'}).count();
+        },
+        'createIncomeEntry' : function(data) {
+            Incomes.insert(data);
+        },
+        'getIncomesByYear' : function(year) {
+            return Incomes.find({$where : 'return this.date.getYear() == 115'}).count();
         }
     });
     

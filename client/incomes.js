@@ -4,23 +4,23 @@ if (Meteor.isClient) {
         return moment(date).format('DD-MM-YYYY');
     });
     
-    Template.expenses.helpers({
+    Template.incomes.helpers({
         years: function() {
-            var distinctEntries = _.uniq(Expenses.find({}, { sort: {'year': 1}, fields: {'year': true} }).fetch().map(function(x) {
+            var distinctEntries = _.uniq(Incomes.find({}, { sort: {'year': 1}, fields: {'year': true} }).fetch().map(function(x) {
                 return x.myField;
             }), true);
             console.log(distinctEntries);
             return distinctEntries;
         },
         total: function() {
-            return Expenses.find().count();
+            return Incomes.find().count();
         },
     });
 
-    Template.expensesByYear.helpers({
+    Template.incomesByYear.helpers({
         total: function() {
             var year = this.year;
-            var total = Expenses.find({'year' : year }).count();
+            var total = Incomes.find({'year' : year }).count();
             if(total == 0)
                 total = "No se han encontrado resultados para este año."
             return total;
@@ -28,19 +28,19 @@ if (Meteor.isClient) {
 
         empty: function() {
             var year = this.year;
-            var total = Expenses.find({'year' : year}).count();
+            var total = Incomes.find({'year' : year}).count();
             return total == 0;
         },
 
-        yearExpenses: function() {
+        yearIncomes: function() {
             var year  = this.year;
             return function() {
-                var expenses = Expenses.find({'year' : year}).fetch();
-                return expenses;
+                var incomes = Incomes.find({'year' : year}).fetch();
+                return incomes;
             };
         },
 
-        yearExpensesOptions: function() {
+        yearIncomesOptions: function() {
             var optionsObject = {
                 bFilter: false,
                 bInfo: false,
@@ -76,33 +76,33 @@ if (Meteor.isClient) {
 
     });
     
-    Template.expensesByMonth.helpers({
+    Template.incomesByMonth.helpers({
         empty: function() {
             var year = this.year;
             var month = this.month;
-            var total = Expenses.find({'month' : month, 'year' : year}).count();
+            var total = Incomes.find({'month' : month, 'year' : year}).count();
             return total == 0;
         },
         
         total: function() {
             var year = this.year;
             var month = this.month;
-            var total = Expenses.find({'month' : month, 'year' : year}).count();
+            var total = Incomes.find({'month' : month, 'year' : year}).count();
             if(total == 0)
                 total = "No se han encontrado resultados para este mes."
             return total;
         },
 
-        monthExpenses: function() {
+        monthIncomes: function() {
             var month = this.month;
             var year  = this.year;
             return function() {
-                var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
-                return expenses;
+                var incomes = Incomes.find({'month' : month, 'year' : year}).fetch();
+                return incomes;
             };
         },
 
-        monthExpensesOptions: function() {
+        monthIncomesOptions: function() {
             var optionsObject = {
                 bFilter: false,
                 bInfo: false,
@@ -137,29 +137,29 @@ if (Meteor.isClient) {
             return optionsObject;
         },
 
-        // totalExpensesAmount: function() {
+        // totalIncomesAmount: function() {
         //     var year = this.year;
         //     var month = this.month;
         //     var total = [];
-        //     var expenses = Expenses.find({'month' : month, 'year' : year});
-        //     expenses.forEach(function(p, index) {
+        //     var incomes = Incomes.find({'month' : month, 'year' : year});
+        //     incomes.forEach(function(p, index) {
         //         p.position = index;
         //         total.push(p)
         //     });
 
         //     var total = 0;
-        //     expenses.forEach(function(e) {
+        //     incomes.forEach(function(e) {
         //         total = total + e.amount;
         //     });
         //     return total;
         // },
         
-        // expensesInMonth: function() {
+        // incomesInMonth: function() {
         //     var year = this.year;
         //     var month = this.month;
         //     var total = [];
-        //     var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
-        //     expenses.forEach(function(p, index) {
+        //     var incomes = Incomes.find({'month' : month, 'year' : year}).fetch();
+        //     incomes.forEach(function(p, index) {
         //         p.position = index;
         //         total.push(p)
         //     });

@@ -71,7 +71,16 @@ if (Meteor.isClient) {
                                 });
                 }
                 else {
-                    swal("Ups!", "Todavía no se pueden crear ingresos","warning");
+                    Meteor.call('createIncomeEntry', transactionData,
+                                function(error,result) { 
+                                    if(error) {
+                                        console.log('Error: ' + error);
+                                    }
+                                    else {
+                                        swal("Hecho", "El ingreso se ha guardado correctamente","success");
+                                    }
+                                });
+
                 }
             }
         }        

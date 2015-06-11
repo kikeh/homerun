@@ -120,125 +120,46 @@
             <button class="btn btn-md btn-block btn-primary" id="add-transaction">Añadir</button>
         </form>
     </div>
-</template>
-
-<template name="expenses">
-    <h4>Gastos</h4>
-    {{#each years}}
-    <table class="expenses hover">
-        <thead>
-            <tr>
-                <th class="left">Año</th>
-                <th class="right">Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="even hoverable">
-                <td width="50%">
-                    {{years}}
-                </td>
-                <td width="50%" align="right">{{amount}} €</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td class="total" align="right">{{totalExpensesAmount}} €</td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
-    {{/each}}
+    <div class="csv">
+        <input type="file" id="csv-uploader" title="CSV" accept="text/csv">
+	<button class="btn btn-lg btn-warning btn-block" id="csv-button">Subida masiva</button>
+    </div>
 </template>
 
 <template name="expensesByYear">
     <h4>Gastos {{ year }}</h4>
-    {{#unless empty}}
-    {{! > ReactiveDatatable tableData=yearExpenses options=yearExpensesOptions }}
-    {{> tableExpenses yearExpenses=yearExpenses}}
-    {{/unless}}
+    {{#if empty}}
+    <h4>No hay gastos en esta fecha</h4>
+    {{else}}
+    {{> tableExpenses expenses=yearExpenses}}
+    {{/if}}
 </template>
 
 <template name="expensesByMonth">
     <h4>Gastos {{ monthName }} <a href="/expenses/{{year}}">{{ year }}</a></h4>
-    {{#unless empty}}
-    {{> ReactiveDatatable tableData=monthExpenses options=monthExpensesOptions }}
-    {{/unless}}
-</template>
-
-<template name="incomes">
-    <h4>Gastos</h4>
-    {{#each years}}
-    <table class="incomes hover">
-        <thead>
-            <tr>
-                <th class="left">Año</th>
-                <th class="right">Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="even hoverable">
-                <td width="50%">
-                    {{years}}
-                </td>
-                <td width="50%" align="right">{{amount}} €</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td class="total" align="right">{{totalIncomesAmount}} €</td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
-    {{/each}}
+    {{#if empty}}
+    <h4>No hay gastos en esta fecha</h4>
+    {{else}}
+    {{> tableExpenses expenses=monthExpenses}}
+    {{/if}}
 </template>
 
 <template name="incomesByYear">
     <h4>Ingresos {{ year }}</h4>
-    {{#unless empty}}
-    {{> ReactiveDatatable tableData=yearIncomes options=yearIncomesOptions }}
-    {{/unless}}
+    {{#if empty}}
+    <h4>No hay ingresos en esta fecha</h4>
+    {{else}}
+    {{> tableIncomes incomes=yearIncomes}}
+    {{/if}}
 </template>
 
 <template name="incomesByMonth">
     <h4>Ingresos {{ monthName }} <a href="/incomes/{{year}}">{{ year }}</a></h4>
-    {{#unless empty}}
-    {{> ReactiveDatatable tableData=monthIncomes options=monthIncomesOptions }}
-    {{/unless}}
-</template>
-
-<template name="balance">
-    <h4>Gastos</h4>
-    {{#each years}}
-    <table class="balance hover">
-        <thead>
-            <tr>
-                <th class="left">Año</th>
-                <th class="right">Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="even hoverable">
-                <td width="50%">
-                    {{years}}
-                </td>
-                <td width="50%" align="right">{{amount}} €</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td class="total" align="right">{{totalBalanceAmount}} €</td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
-    {{/each}}
+    {{#if empty}}
+    <h4>No hay ingresos en esta fecha</h4>
+    {{else}}
+    {{> tableIncomes incomes=monthIncomes}}
+    {{/if}}
 </template>
 
 <template name="balanceByYear">
@@ -298,12 +219,53 @@
             </tr>
         </tfoot>
         <tbody>
-            {{#each yearExpenses}}
+            {{#each expenses}}
             <tr>
                 <td>{{this.description}}</td>
                 <td>{{this.category}}</td>
-                <td>{{this.date}}</td>
+                <td>{{this.year}}-{{this.month}}-{{this.day}}</td>
                 <td class="right">{{this.amount}}</td>
+                <td class="right">{{formatPercentage this.expensePercentage}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="tableIncomes">
+    <table class="incomes stripe hover compact">
+        <thead>
+            <tr>
+                <th>
+                    Descripción
+                </th>
+                <th>
+                    Categoría
+                </th>
+                <th>
+                    Fecha
+                </th>
+                <th class="right">
+                    Cantidad (€)
+                </th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th class="right">
+                    Total
+                </th>
+                <th class="right"></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {{#each incomes}}
+            <tr>
+                <td>{{this.description}}</td>
+                <td>{{this.category}}</td>
+                <td>{{this.year}}-{{this.month}}-{{this.day}}</td>
                 <td class="right">{{this.amount}}</td>
             </tr>
             {{/each}}

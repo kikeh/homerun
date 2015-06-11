@@ -83,7 +83,75 @@ if (Meteor.isClient) {
 
                 }
             }
-        }        
+        },
+
+        'click #csv-button': function(event) {
+            event.preventDefault();
+            // var file = $('#csv-uploader')[0].files[0];
+            $('#csv-uploader').parse({
+	            config: {
+	                delimiter: "	",	// auto-detect
+	                newline: "",	// auto-detect
+                        complete: function(results, file) {
+	                    console.log("Parsing complete:", results, file);
+                            var data = results.data;
+                            _.each(data, function(row) {
+                                // Save row
+                                console.log(row);
+                                var transaction = row[7];
+                                var transactionData = {
+                                    'description': row[0],
+                                    'category': row[1],
+                                    'day': row[2],
+                                    'month': row[3],
+                                    'year': row[4],
+                                    'amount': row[5],
+                                    'type': row[6],
+                                    'date': new Date(row[4],Number(row[3])-1,row[2]),
+                                    'createdAt': new Date()
+                                }
+                                if(transaction == '0') {
+                                    Meteor.call('createExpenseEntry', transactionData,
+                                                function(error,result) { 
+                                                    if(error) {
+                                                        console.log('Error: ' + error);
+                                                    }
+                                                    else {
+                                                        // 
+                                                    }
+                                                });
+                                }
+                                else {
+                                    Meteor.call('createIncomeEntry', transactionData,
+                                                function(error,result) { 
+                                                    if(error) {
+                                                        console.log('Error: ' + error);
+                                                    }
+                                                    else {
+                                                        //
+                                                    }
+                                                });
+
+                                }
+	                    });
+                        }
+	            },
+	            before: function(file, inputElem)
+	            {
+                        //
+	            },
+	            error: function(err, file, inputElem, reason)
+	            {
+		        console.log("Error: ");
+		        console.log(err);
+		        console.log(reason);
+	            },
+	            complete: function()
+	            {
+		        console.log("Fin");
+	            }
+            });
+        }
     });
 
     Template.addTransaction.rendered = function() {

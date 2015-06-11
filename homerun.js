@@ -24,8 +24,6 @@ if (Meteor.isClient) {
                 
     });
 
-    Router.route('/expenses');
-
     Router.route('expensesByYear', {
         path: '/expenses/:_year',
         data: function() {
@@ -48,8 +46,6 @@ if (Meteor.isClient) {
         }
     });
 
-    Router.route('/incomes');
-
     Router.route('incomesByYear', {
         path: '/incomes/:_year',
         data: function() {
@@ -71,8 +67,6 @@ if (Meteor.isClient) {
             return templateData;
         }
     });
-
-    Router.route('/balance');
 
     Router.route('balanceByYear', {
         path: '/balance/:_year',
@@ -123,7 +117,61 @@ if (Meteor.isClient) {
     var spinner = '<div class="sk-spinner sk-spinner-rotating-plane"></div>';
 
     /* Basic templates */
+
+    var getTodayData = function() {
+        var today = new Date();
+        var data = { 'year'  : (today.getYear() + 1900).toString(),
+                     'month' : today.getMonth() < 10 ? '0' + (today.getMonth()+1) : (today.getMonth()+1).toString(),
+                     'day'   : today.getDate().toString() };
+        return data;
+    };
     
+    var createNewFixedIncome = function(entry, year, month) {
+        var data = {
+            'description' : entry.description,
+            'category'    : entry.category,
+            'amount'      : entry.amount,
+            'type'        : entry.type,
+            'date'        : new Date(year,month-1,entry.day),
+            'year'        : year,
+            'month'       : month,
+            'day'         : entry.day,
+            'createdAt'   : new Date(),
+            'endDate'     : entry.endDate
+        };
+        return data;
+    };
+
+    Template.home.rendered = function() {        
+        var today = new Date();
+        // var fixedExpenses = Expenses.find({'type':'Fijo' /*, 'endDate': { '$gte' : today }} */}).fetch();
+        var fixedIncomes = Incomes.find({'type':'Fijo', 'endDate': { '$gte' : today }}).fetch();
+        if(fixedIncomes) {
+            var todayData = getTodayData();
+            _.each(fixedIncomes, function(i) {
+                // console.log(i);
+                var description = i.description;
+                var currentMonth = Incomes.find({ 'type' : 'Fijo',
+                                                  'description' : description,
+                                                  'month' : todayData.month,
+                                                  'year' : todayData.year}).fetch();
+                if(currentMonth.length == 0) {
+                    var transactionData = createNewFixedIncome(i,todayData.year,todayData.month);
+                    Meteor.call('createIncomeEntry', transactionData,
+                                function(error,result) { 
+                                    if(error) {
+                                        console.log('Error: ' + error);
+                                    }
+                                    else {
+                                        console.log('Actualizados ingresos fijos mensuales');
+                                    }
+                                });
+                }
+            });
+        }
+    },
+
+            
     Template.home.helpers({
         counter: function () {
             return Session.get('counter');

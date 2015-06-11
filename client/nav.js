@@ -30,7 +30,11 @@ if (Meteor.isClient) {
     Template.nav.helpers({
         years: function() {
             var monthsAndYears = Expenses.find({}, { sort: {'year': 1}, fields: {'year': true, 'month' : true} }).map(function(x) { return { 'year': x.year, 'month' : x.month} });
+            var monthsAndYearsIncomes = Incomes.find({}, { sort: {'year': 1}, fields: {'year': true, 'month' : true} }).map(function(x) { monthsAndYears.push({ 'year': x.year, 'month' : x.month}); });
             var distinctYears  = _.uniq(Expenses.find({}, { sort: {'year': 1}, fields: {'year': true} }).map(function(x) { return x.year }));
+            var distinctYearsIncomes  = _.uniq(Incomes.find({}, { sort: {'year': 1}, fields: {'year': true} }).map(function(x) { distinctYears.push(x.year) }));
+            distinctYears = _.uniq(distinctYears.sort());
+            console.log(distinctYears);
             var years = [];
             _.each(distinctYears, function(year) {
                 var objectYear = {};

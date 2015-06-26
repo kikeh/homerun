@@ -27,29 +27,20 @@ if (Meteor.isClient) {
             return 'Diciembre';
     });
 
+    Session.set('years',[]);
+    
     Template.nav.helpers({
         years: function() {
-            var monthsAndYears = Expenses.find({}, { sort: {'year': 1}, fields: {'year': true, 'month' : true} }).map(function(x) { return { 'year': x.year, 'month' : x.month} });
-            var monthsAndYearsIncomes = Incomes.find({}, { sort: {'year': 1}, fields: {'year': true, 'month' : true} }).map(function(x) { monthsAndYears.push({ 'year': x.year, 'month' : x.month}); });
-            var distinctYears  = _.uniq(Expenses.find({}, { sort: {'year': 1}, fields: {'year': true} }).map(function(x) { return x.year }));
-            var distinctYearsIncomes  = _.uniq(Incomes.find({}, { sort: {'year': 1}, fields: {'year': true} }).map(function(x) { distinctYears.push(x.year) }));
-            distinctYears = _.uniq(distinctYears.sort());
-            console.log(distinctYears);
             var years = [];
-            _.each(distinctYears, function(year) {
-                var objectYear = {};
-                objectYear['year'] = year;
-                objectYear['months'] = [];
-                _.each(monthsAndYears, function(entry) {
-                    if(entry.year == year) {
-                        if(objectYear['months'].indexOf(entry.month) == -1)
-                            objectYear['months'].push(entry.month);
-                    }
-                });
-                objectYear['months'].sort();
-                years.push(objectYear);
+            Meteor.call('getActiveYearsAndMonths', function(error, result) {
+                if(!error) {
+                    Session.set('years', result);
+                }
+                else {
+                    console.log("Error: " + error);
+                }
             });
-            return years;
+            return Session.get('years');
         },
         total: function() {
             return Expenses.find().count();

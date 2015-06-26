@@ -58,7 +58,15 @@ if (Meteor.isClient) {
                     numeral.language('es')(total).format('0[.]00 $')
                 );
             }
-        } );
+        } ).rowGrouping({iGroupingColumnIndex : 1, bExpandableGrouping: true,
+                         fnOnGrouped: function() {
+                             var groups = $('tr[id^=group-]');
+                             _.each(groups, function(group) {
+                                 var info = $(group).next();
+                                 console.log(info);
+                             });
+                         }
+                        });
     };
     
     Template.expensesByYear.helpers({

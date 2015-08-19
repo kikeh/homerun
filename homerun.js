@@ -1,5 +1,6 @@
-Incomes  = new Mongo.Collection("incomes");
-Expenses = new Mongo.Collection("expenses");
+Incomes    = new Mongo.Collection("incomes");
+Expenses   = new Mongo.Collection("expenses");
+Categories = new Mongo.Collection("categories");
 
 if (Meteor.isClient) {
 
@@ -90,6 +91,96 @@ if (Meteor.isClient) {
         }
     });
 
+    Router.route('/chart', function () {
+        this.render('chart');
+    });
+
+    Template.chart.rendered = function() {
+        var margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        var parseDate = d3.time.format("%d-%b-%y").parse;
+
+        var x = d3.time.scale()
+            .range([0, width]);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+        var line = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.amount); });
+
+        var svg = d3.select('#myChart')
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Deps.autorun(function () {
+
+        // var dataO = Expenses.find({}).fetch();
+        
+        var dataO = [
+            { "amount" : "1893,00", "date" : new Date("2015-08-01T22:00:00Z") },
+            { "amount" : "1293,00", "date" : new Date("2015-08-02T22:00:00Z") },
+            { "amount" : "1146,99", "date" : new Date("2015-08-03T22:00:00Z") },
+            { "amount" : "1098,38", "date" : new Date("2015-08-04T22:00:00Z") },
+            { "amount" : "999,34", "date" : new Date("2015-08-05T22:00:00Z") },
+            { "amount" : "725,13", "date" : new Date("2015-08-06T22:00:00Z") }
+        ];
+
+        var data = [];
+        
+        dataO.forEach(function(d) {
+            var format = d3.time.format("%e-%b-%y");
+            var date = format(new Date(d.date));
+            var amount = d.amount.replace(',','.');
+            var value = { 'date' : date, 'amount' : amount };
+            data.push(value);
+        });
+
+        data.forEach(function(d) {
+            d.date = parseDate(d.date);
+            d.amount = +d.amount;
+        });
+        
+        console.log(data);
+        
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y.domain(d3.extent(data, function(d) { return d.amount; }));
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Gasto (€)");
+
+        svg.append("path")
+            .datum(data)
+            .attr("class", "line")
+            .attr("d", line);
+              //});
+        // });
+    };
     
     Router.configure({
         loadingTemplate: 'loading',
@@ -144,7 +235,7 @@ if (Meteor.isClient) {
 
     Template.home.rendered = function() {        
         var today = new Date();
-        // var fixedExpenses = Expenses.find({'type':'Fijo' /*, 'endDate': { '$gte' : today }} */}).fetch();
+        var fixedExpenses = Expenses.find({'type':'Fijo', 'endDate': { '$gte' : today }}).fetch();
         var fixedIncomes = Incomes.find({'type':'Fijo', 'endDate': { '$gte' : today }}).fetch();
         if(fixedIncomes) {
             var todayData = getTodayData();
@@ -164,6 +255,30 @@ if (Meteor.isClient) {
                                     }
                                     else {
                                         console.log('Actualizados ingresos fijos mensuales');
+                                    }
+                                });
+                }
+            });
+        }
+
+        if(fixedExpenses) {
+            var todayData = getTodayData();
+            _.each(fixedExpenses, function(i) {
+                // console.log(i);
+                var description = i.description;
+                var currentMonth = Expenses.find({ 'type' : 'Fijo',
+                                                  'description' : description,
+                                                  'month' : todayData.month,
+                                                  'year' : todayData.year}).fetch();
+                if(currentMonth.length == 0) {
+                    var transactionData = createNewFixedIncome(i,todayData.year,todayData.month);
+                    Meteor.call('createExpenseEntry', transactionData,
+                                function(error,result) { 
+                                    if(error) {
+                                        console.log('Error: ' + error);
+                                    }
+                                    else {
+                                        console.log('Actualizados gastos fijos mensuales');
                                     }
                                 });
                 }
@@ -227,6 +342,7 @@ if (Meteor.isServer) {
     });
     
     Meteor.startup(function () {
-
+        // Start typeahead
+        // Meteor.typeahead.inject();        
     });
 }

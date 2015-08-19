@@ -188,7 +188,7 @@ if (Meteor.isClient) {
             var expenses = Expenses.find({'month' : month, 'year' : year}).fetch();
             _.each(expenses, function(e) {
                 // e['totalIncome'] = totalIncome;
-                e['expensePercentage'] = (Number(e['amount'].replace(',','.')) / totalExpense);
+                // e['expensePercentage'] = (Number(e['amount'].replace(',','.')) / totalExpense);
             });
             return expenses;
         },

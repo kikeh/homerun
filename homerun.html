@@ -108,7 +108,9 @@
             <input type="text" name="transaction-description" class="form-control" placeholder="Descripción" />
             
             <label>Categoría</label>
-            <input type="text" name="transaction-category" class="form-control" placeholder="Categoría" />
+            <!-- <input type="text" name="transaction-category" class="form-control typeahead" placeholder="Categoría" -->
+            <!--        autocomplete="off" spellcheck="off" data-provide="typeahead" data-source="categories"/> -->
+            {{> inputAutocomplete settings=settings id="tCategory" name="transaction-category" class="form-control" placeholder="Categorías"}}
             
             <label>Cantidad</label>
             <input type="text" name="transaction-amount" class="form-control" placeholder="0,00" />
@@ -128,6 +130,18 @@
         <input type="file" id="csv-uploader" title="CSV" accept="text/csv">
 	<button class="btn btn-lg btn-warning btn-block" id="csv-button">Subida masiva</button>
     </div>
+</template>
+
+<template name="transactionCategory">
+    <span class="category">{{name}}</span>
+</template>
+
+<template name="transactionNotFoundCategory">
+  <ul class="-autocomplete-list">
+    <li class="-autocomplete-item new">
+      <span class="category">{{text}} [Añadir]</span>
+    </li>
+  </ul>
 </template>
 
 <template name="expensesByYear">
@@ -206,9 +220,9 @@
                 <th class="right">
                     Cantidad (€)
                 </th>
-                <th class="right">
+                <!--<th class="right">
                     % gasto
-                </th>
+                </th>-->
             </tr>
         </thead>
         <tfoot>
@@ -219,7 +233,7 @@
                     Total
                 </th>
                 <th class="right"></th>
-                <th></th>
+                <!--<th></th>-->
             </tr>
         </tfoot>
         <tbody>
@@ -229,7 +243,7 @@
                 <td>{{this.category}}</td>
                 <td>{{this.year}}-{{this.month}}-{{this.day}}</td>
                 <td class="right">{{this.amount}}</td>
-                <td class="right">{{formatPercentage this.expensePercentage}}</td>
+                <!-- <td class="right">{{formatPercentage this.expensePercentage}}</td>-->
             </tr>
             {{/each}}
         </tbody>
@@ -275,4 +289,9 @@
             {{/each}}
         </tbody>
     </table>
+</template>
+
+<template name="chart">
+    <svg id="myChart">
+    </svg>
 </template>

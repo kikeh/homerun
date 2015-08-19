@@ -15,9 +15,20 @@ if (Meteor.isClient) {
             'year'        : year,
             'month'       : month,
             'day'         : day,
-            'createdAt'   : new Date()
+            'createdAt'   : new Date(),
+            'endDate'     : getEndDate(formArray[3].value)
         };
         return data;
+    };
+
+
+    var getEndDate = function(value) {
+        if(value == "Fijo") {
+            return new Date("9999-12-31T22:00:00Z");
+        }
+        else {
+            return new Date();
+        }
     };
 
     var dataIsValid = function(data) {
@@ -52,8 +63,38 @@ if (Meteor.isClient) {
             else
                 return "No"
         },
+
+        settings: function() {
+            // var categories = Categories;
+            return {
+                position: "top",
+                limit: 5,
+                rules: [
+                    {
+                        collection: Categories,
+                        field: "name",
+                        options: '',
+                        matchAll: true,
+                        template: Template.transactionCategory,
+                        noMatchTemplate: Template.transactionNotFoundCategory
+                    }
+                ]
+            };
+        }
     });
-    
+
+    Template.transactionNotFoundCategory.helpers({
+        text: function() {
+            return $('#tCategory').val();
+        }
+    });
+
+    Template.addTransaction.categories = function(){
+	var c = Categories.find().fetch().map(function(it){ return it.name; });
+        console.log(c);
+        return c;
+    };
+
     Template.addTransaction.events({
         'click #add-transaction': function (event) {
             event.preventDefault();
@@ -108,7 +149,8 @@ if (Meteor.isClient) {
                                     'amount': row[5],
                                     'type': row[6],
                                     'date': new Date(row[4],Number(row[3])-1,row[2]),
-                                    'createdAt': new Date()
+                                    'createdAt': new Date(),
+                                    'endDate' : getEndDate(row[6])
                                 }
                                 if(transaction == '0') {
                                     Meteor.call('createExpenseEntry', transactionData,
@@ -151,6 +193,10 @@ if (Meteor.isClient) {
 		        console.log("Fin");
 	            }
             });
+        },
+        'click .new': function(event) {
+            var newCategory = $(event.currentTarget).children();
+            console.log(newCategory);
         }
     });
 
@@ -167,4 +213,3 @@ if (Meteor.isClient) {
         //
     });
 }
-

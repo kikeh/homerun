@@ -16,3 +16,5 @@ ephemer:reactive-datatables
 numeral:numeral
 harrison:papa-parse
 aldeed:scheduled-tasks
+d3js:d3
+mizzao:autocomplete

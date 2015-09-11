@@ -14,8 +14,6 @@
     <script src="client/jquery.dataTables.rowGrouping.js"></script>
 </body>
 
-
-
 <template name="layout">
     <header>
         {{> nav }}
@@ -149,7 +147,7 @@
     {{#if empty}}
     <h4>No hay gastos en esta fecha</h4>
     {{else}}
-    {{> tableExpenses expenses=yearExpenses}}
+    {{> tableTransactions transactions=yearExpenses}}
     {{/if}}
 </template>
 
@@ -158,7 +156,7 @@
     {{#if empty}}
     <h4>No hay gastos en esta fecha</h4>
     {{else}}
-    {{> tableExpenses expenses=monthExpenses}}
+    {{> tableTransactions transactions=monthExpenses totalAmount=totalAmount}}
     {{/if}}
 </template>
 
@@ -167,7 +165,7 @@
     {{#if empty}}
     <h4>No hay ingresos en esta fecha</h4>
     {{else}}
-    {{> tableIncomes incomes=yearIncomes}}
+    {{> tableTransactions transactions=yearIncomes}}
     {{/if}}
 </template>
 
@@ -176,7 +174,16 @@
     {{#if empty}}
     <h4>No hay ingresos en esta fecha</h4>
     {{else}}
-    {{> tableIncomes incomes=monthIncomes}}
+    {{> tableTransactions transactions=monthIncomes totalAmount=totalAmount}}
+    {{/if}}
+</template>
+
+<template name="balanceTableByMonth">
+    <h4>Balance</h4>
+    {{#if empty}}
+    <h4>No hay ingresos ni gastos en esta fecha</h4>
+    {{else}}
+    {{> tableBalance }}
     {{/if}}
 </template>
 
@@ -202,10 +209,13 @@
     <div class="row">
         {{> incomesByMonth}}
     </div>
+    <div class="row">
+        {{> balanceTableByMonth}}
+    </div>
 </template>
 
-<template name="tableExpenses">
-    <table class="expenses stripe hover compact">
+<template name="tableTransactions">
+    <table class="transactions">
         <thead>
             <tr>
                 <th>
@@ -220,9 +230,6 @@
                 <th class="right">
                     Cantidad (€)
                 </th>
-                <!--<th class="right">
-                    % gasto
-                </th>-->
             </tr>
         </thead>
         <tfoot>
@@ -232,36 +239,28 @@
                 <th class="right">
                     Total
                 </th>
-                <th class="right"></th>
-                <!--<th></th>-->
+                <th class="right">{{totalAmount}}</th>
             </tr>
         </tfoot>
         <tbody>
-            {{#each expenses}}
+            {{#each transactions}}
             <tr>
                 <td>{{this.description}}</td>
                 <td>{{this.category}}</td>
                 <td>{{this.year}}-{{this.month}}-{{this.day}}</td>
                 <td class="right">{{this.amount}}</td>
-                <!-- <td class="right">{{formatPercentage this.expensePercentage}}</td>-->
             </tr>
             {{/each}}
         </tbody>
     </table>
 </template>
 
-<template name="tableIncomes">
-    <table class="incomes stripe hover compact">
+<template name="tableBalance">
+    <table class="balance">
         <thead>
             <tr>
                 <th>
-                    Descripción
-                </th>
-                <th>
-                    Categoría
-                </th>
-                <th>
-                    Fecha
+                    Tipo
                 </th>
                 <th class="right">
                     Cantidad (€)
@@ -270,23 +269,21 @@
         </thead>
         <tfoot>
             <tr>
-                <th></th>
-                <th></th>
                 <th class="right">
                     Total
                 </th>
-                <th class="right"></th>
+                <th class="right {{balanceResult}}">{{totalBalance}}</th>
             </tr>
         </tfoot>
         <tbody>
-            {{#each incomes}}
             <tr>
-                <td>{{this.description}}</td>
-                <td>{{this.category}}</td>
-                <td>{{this.year}}-{{this.month}}-{{this.day}}</td>
-                <td class="right">{{this.amount}}</td>
+                <td>Ingresos</td>
+                <td class="right">{{totalIncomes}}</td>
             </tr>
-            {{/each}}
+            <tr>
+                <td>Gastos</td>
+                <td class="right">{{totalExpenses}}</td>
+            </tr>
         </tbody>
     </table>
 </template>

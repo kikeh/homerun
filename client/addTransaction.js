@@ -130,7 +130,7 @@ if (Meteor.isClient) {
             event.preventDefault();
             // var file = $('#csv-uploader')[0].files[0];
             $('#csv-uploader').parse({
-	            config: {
+	        config: {
 	                delimiter: "	",	// auto-detect
 	                newline: "",	// auto-detect
                         complete: function(results, file) {

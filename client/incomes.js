@@ -9,56 +9,6 @@ if (Meteor.isClient) {
     });
 
     Template.incomesByYear.rendered = function() {
-        numeral.language('es', {
-            delimiters: {
-                thousand: '',
-                decimal: ','
-            },
-            currency: {
-                symbol: '€'
-            }
-        });
-        
-        $('.incomes').dataTable( {
-            "paging":   false,
-            "info":     false,
-            "filter": false,
-            "order": [[2, 'asc']],
-            "columnDefs": [
-                {
-                    "render": function ( data, type, row ) {
-                        return moment(data).format('YYYY-MM-DD');
-                    },
-                    "targets": 2
-                }],
-            "footerCallback": function ( row, data, start, end, display ) {
-                var api = this.api(), data;
-                
-                // Remove the formatting to get integer data for summation
-                var intVal = function ( i ) {
-                    return typeof i === 'string' ?
-                        i.replace(',','.')*1 :
-                        typeof i === 'number' ?
-                        i : 0;
-                };
-
-                var total = 0;
-                
-                if(api.column(3).data().length) {
-                    total = api
-                        .column( 3 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        } );
-                }
-
-                // Update footer
-                $( api.column( 3 ).footer() ).html(
-                    numeral.language('fr')(total).format('0[.]00 $')
-                );
-            }
-        } );
     };
     
     Template.incomesByYear.helpers({
@@ -85,67 +35,18 @@ if (Meteor.isClient) {
     });
     
     Template.incomesByMonth.rendered = function() {
-        numeral.language('es', {
-            delimiters: {
-                thousand: '',
-                decimal: ','
-            },
-            currency: {
-                symbol: '€'
-            }
-        });
-        
-        $('.incomes').dataTable( {
-            "paging":   false,
-            "info":     false,
-            "filter": false,
-            "order": [[2, 'asc']],
-            // "columnDefs": [
-            //     {
-            //         "render": function ( data, type, row ) {
-            //             return moment(data).format('YYYY-MM-DD');
-            //         },
-            //         "targets": 2
-            //     }],
-            "footerCallback": function ( row, data, start, end, display ) {
-                var api = this.api(), data;
-                
-                // Remove the formatting to get integer data for summation
-                var intVal = function ( i ) {
-                    return typeof i === 'string' ?
-                        i.replace(',','.')*1 :
-                        typeof i === 'number' ?
-                        i : 0;
-                };
-
-                var total = 0;
-                
-                if(api.column(3).data().length) {
-                    total = api
-                        .column( 3 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        } );
-                }
-
-                // Update footer
-                $( api.column( 3 ).footer() ).html(
-                    numeral.language('es')(total).format('0[.]00 $')
-                );
-            }
-        } );
     };
     
     Template.incomesByMonth.helpers({
         totalAmount: function() {
             var year = this.year;
-            var incomes = Incomes.find({'year' : year });
+            var month = this.month;
+            var incomes = Incomes.find({'year' : year, 'month' : month }).fetch();
             var total = 0;
             _.each(incomes, function(income) {
-                total = total + income.amount;
+                total = total + parseFloat(income.amount.replace(',','.'));
             });
-            return total;
+            return total.toString().replace('.',',');
         },
         
         empty: function() {

@@ -7,35 +7,6 @@ if (Meteor.isClient) {
     Template.registerHelper('formatPercentage', function(value) {
         return numeral.language('es')(value).format('0.00%');
     });
-
-    Template.incomesByYear.rendered = function() {
-    };
-    
-    Template.incomesByYear.helpers({
-        totalAmount: function() {
-            var year = this.year;
-            var incomes = Incomes.find({'year' : year });
-            var total = 0;
-            _.each(incomes, function(income) {
-                total = total + income.amount;
-            });
-            return total;
-        },
-
-        empty: function() {
-            var year = this.year;
-            var total = Incomes.find({'year' : year}).count();
-            return total == 0;
-        },
-
-        yearIncomes: function() {
-            var year  = this.year;
-            return Incomes.find({'year' : year}).fetch();
-        },
-    });
-    
-    Template.incomesByMonth.rendered = function() {
-    };
     
     Template.incomesByMonth.helpers({
         totalAmount: function() {
@@ -92,7 +63,30 @@ if (Meteor.isClient) {
         }
         
     });
-    
+
+    Template.incomesByYear.helpers({
+        totalAmount: function() {
+            var year = this.year;
+            var incomes = Incomes.find({'year' : year}).fetch();
+            var total = 0;
+            _.each(incomes, function(income) {
+                total = total + parseFloat(income.amount.replace(',','.'));
+            });
+            return total.toString().replace('.',',');
+        },
+        
+        empty: function() {
+            var year = this.year;
+            var total = Incomes.find({'year' : year}).count();
+            return total == 0;
+        },
+
+        yearIncomes: function() {
+            var year  = this.year;
+            var incomes = Incomes.find({'year' : year}).fetch();
+            return incomes;
+        },        
+    });
 }
 
 // if (Meteor.isClient) {

@@ -8,6 +8,24 @@ if (Meteor.isClient) {
         return numeral.language('es')(value).format('0.00%');
     });
 
+    var totalIncomeByYear = function(year) {
+        var incomes = Incomes.find({'year': year}).fetch();
+        var total = 0;
+        _.each(incomes, function(income) {
+            total += parseFloat(income.amount.replace(',','.'));
+        });
+        return total;
+    };
+
+    var totalExpenseByYear = function(year) {
+        var expenses = Expenses.find({'year': year}).fetch();
+        var total = 0;
+        _.each(expenses, function(expense) {
+            total += parseFloat(expense.amount.replace(',','.'));
+        });
+        return total;
+    };
+    
     var totalIncomeByMonth = function(month, year) {
         var incomes = Incomes.find({'month': month, 'year': year}).fetch();
         var total = 0;
@@ -28,22 +46,45 @@ if (Meteor.isClient) {
 
     Template.tableBalance.helpers({
         totalBalance: function() {
-            var totalIncomes = totalIncomeByMonth(this.month, this.year);
-            var totalExpenses = totalExpenseByMonth(this.month, this.year);
+            console.log(this.period);
+            console.log(this.month);
+            console.log(this.year);
+            if(this.period == "month") {
+                var totalIncomes = totalIncomeByMonth(this.month, this.year);
+                var totalExpenses = totalExpenseByMonth(this.month, this.year);
+            }
+            else {
+                var totalIncomes = totalIncomeByYear(this.year);
+                var totalExpenses = totalExpenseByYear(this.year);
+            }
+            
             return (totalIncomes - totalExpenses).toString().replace('.',',');
         },
 
         totalIncomes: function() {
-            return (totalIncomeByMonth(this.month, this.year)).toString().replace('.',',');
+            if(this.period == "month")
+                return (totalIncomeByMonth(this.month, this.year)).toString().replace('.',',');
+            else
+                return (totalIncomeByYear(this.year)).toString().replace('.',',');
         },
 
         totalExpenses: function() {
-            return (totalExpenseByMonth(this.month, this.year)).toString().replace('.',',');
+            if(this.period == "month")
+                return (totalExpenseByMonth(this.month, this.year)).toString().replace('.',',');
+            else
+                return (totalExpenseByYear(this.year)).toString().replace('.',',');
         },
 
         balanceResult: function() {
-            var totalIncomes = totalIncomeByMonth(this.month, this.year);
-            var totalExpenses = totalExpenseByMonth(this.month, this.year);
+            if(this.period == "month") {
+                var totalIncomes = totalIncomeByMonth(this.month, this.year);
+                var totalExpenses = totalExpenseByMonth(this.month, this.year);
+            }
+            else {
+                var totalIncomes = totalIncomeByYear(this.year);
+                var totalExpenses = totalExpenseByYear(this.year);
+            }
+                   
             var result = totalIncomes - totalExpenses;
             if(result > 0) {
                 return "positive";
@@ -54,8 +95,14 @@ if (Meteor.isClient) {
         },
         
         empty: function() {
-            var totalIncomes = totalIncomeByMonth(this.month, this.year);
-            var totalExpenses = totalExpenseByMonth(this.month, this.year);
+            if(this.period == "month") {
+                var totalIncomes = totalIncomeByMonth(this.month, this.year);
+                var totalExpenses = totalExpenseByMonth(this.month, this.year);
+            }
+            else {
+                var totalIncomes = totalIncomeByYear(this.year);
+                var totalExpenses = totalExpenseByYear(this.year);
+            }
             return (totalIncomes == 0) && (totalExpenses == 0);
         },
         

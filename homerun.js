@@ -304,6 +304,9 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
 
     Meteor.methods({
+        'createNewCategory' : function(category) {
+            Categories.insert({'name' : category});
+        },        
         'createExpenseEntry' : function(data) {
             Expenses.insert(data);
         },

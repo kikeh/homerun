@@ -106,9 +106,7 @@
             <input type="text" name="transaction-description" class="form-control" placeholder="Descripción" />
             
             <label>Categoría</label>
-            <!-- <input type="text" name="transaction-category" class="form-control typeahead" placeholder="Categoría" -->
-            <!--        autocomplete="off" spellcheck="off" data-provide="typeahead" data-source="categories"/> -->
-            {{> inputAutocomplete settings=settings id="tCategory" name="transaction-category" class="form-control" placeholder="Categorías"}}
+            {{> transactionCategory}}
             
             <label>Cantidad</label>
             <input type="text" name="transaction-amount" class="form-control" placeholder="0,00" />
@@ -131,15 +129,17 @@
 </template>
 
 <template name="transactionCategory">
-    <span class="category">{{name}}</span>
-</template>
-
-<template name="transactionNotFoundCategory">
-  <ul class="-autocomplete-list">
-    <li class="-autocomplete-item new">
-      <span class="category">{{text}} [Añadir]</span>
-    </li>
-  </ul>
+    <select id="transactionCategoryList" class="form-control">
+        <option value="" disabled selected>Categoría</option>
+        {{#each categories}}
+        <option class="transactionCategoryItem" value="{{name}}">{{name}}</option>
+        {{/each}}
+        <option class="transactionCategoryItem" value="add">Añadir...</option>
+    </select>
+    <div id="new-category" class="hidden">
+        <label>Añadir categoría</label>
+        <input type="text" name="transaction-new-category" class="form-control" placeholder="Nueva categoría" />
+    </div>
 </template>
 
 <template name="expensesByYear">
@@ -147,7 +147,7 @@
     {{#if empty}}
     <h4>No hay gastos en esta fecha</h4>
     {{else}}
-    {{> tableTransactions transactions=yearExpenses}}
+    {{> tableTransactions transactions=yearExpenses totalAmount=totalAmount}}
     {{/if}}
 </template>
 
@@ -165,7 +165,7 @@
     {{#if empty}}
     <h4>No hay ingresos en esta fecha</h4>
     {{else}}
-    {{> tableTransactions transactions=yearIncomes}}
+    {{> tableTransactions transactions=yearIncomes totalAmount=totalAmount}}
     {{/if}}
 </template>
 
@@ -178,12 +178,21 @@
     {{/if}}
 </template>
 
+<template name="balanceTableByYear">
+    <h4>Balance</h4>
+    {{#if empty}}
+    <h4>No hay ingresos ni gastos en esta fecha</h4>
+    {{else}}
+    {{> tableBalance period='year' month=month year=year }}
+    {{/if}}
+</template>
+
 <template name="balanceTableByMonth">
     <h4>Balance</h4>
     {{#if empty}}
     <h4>No hay ingresos ni gastos en esta fecha</h4>
     {{else}}
-    {{> tableBalance }}
+    {{> tableBalance period='month' month=month year=year }}
     {{/if}}
 </template>
 
@@ -196,6 +205,9 @@
     </div>
     <div class="row">
         {{> incomesByYear}}
+    </div>
+    <div class="row">
+        {{> balanceTableByYear}}
     </div>
 </template>
 
@@ -210,7 +222,7 @@
         {{> incomesByMonth}}
     </div>
     <div class="row">
-        {{> balanceTableByMonth}}
+        {{> balanceTableByMonth month=month year=year }}
     </div>
 </template>
 

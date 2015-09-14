@@ -8,9 +8,10 @@ if (Meteor.isClient) {
         var year  = transactionDateFigures[2];
         var data = {
             'description' : formArray[0].value,
-            'category'    : formArray[1].value,
+            'newCategory': formArray[1].value,
             'amount'      : formArray[2].value,
             'type'        : formArray[3].value,
+            'category'    : $('#transactionCategoryList option:selected').text(),
             'date'        : new Date(year,month-1,day),
             'year'        : year,
             'month'       : month,
@@ -54,8 +55,12 @@ if (Meteor.isClient) {
             swal("Error", "Descripción no válida", "error");
             valid = false;
         }
-        else if(data.category == "") {
+        else if((data.category == "") || (data.category == "Categoría")) {
             swal("Error", "Categoría no válida", "error");
+            valid = false;
+        }
+        else if((data.category == "Añadir...") && (data.newCategory == "")) {
+            swal("Error", "Debes introducir una categoría nueva", "error");
             valid = false;
         }
         return valid;
@@ -70,44 +75,41 @@ if (Meteor.isClient) {
             else
                 return "No"
         },
-
-        settings: function() {
-            // var categories = Categories;
-            return {
-                position: "top",
-                limit: 5,
-                rules: [
-                    {
-                        collection: Categories,
-                        field: "name",
-                        options: '',
-                        matchAll: true,
-                        template: Template.transactionCategory,
-                        noMatchTemplate: Template.transactionNotFoundCategory
-                    }
-                ]
-            };
-        }
     });
 
-    Template.transactionNotFoundCategory.helpers({
-        text: function() {
-            return $('#tCategory').val();
-        }
+    Template.transactionCategory.helpers({
+        categories: function() {
+            return Categories.find({}).fetch();
+        },
     });
-
-    Template.addTransaction.categories = function(){
-	var c = Categories.find().fetch().map(function(it){ return it.name; });
-        console.log(c);
-        return c;
-    };
 
     Template.addTransaction.events({
+        'change #transactionCategoryList': function(event) {
+            var option = $(event.target).val();
+            if(option == "add") {
+                $('#new-category').removeClass('hidden');
+            }
+            else {
+                $('#new-category').addClass('hidden');
+            }
+        },
+
         'click #add-transaction': function (event) {
             event.preventDefault();
             var transactionData = getTransactionInfo();
             if(dataIsValid(transactionData)){
+                // Fix data
                 transactionData['amount'] = formatAmount(transactionData['amount']);
+                if(transactionData['category'] == "Añadir...") {
+                    transactionData['category'] = transactionData['newCategory'];
+                    Meteor.call('createNewCategory', transactionData['newCategory'],
+                                function(error, result) {
+                                    if(error) {
+                                        console.log('Error: ' + error);
+                                    }
+                                });
+                }
+                
                 if(this.type == "expense") {
                     Meteor.call('createExpenseEntry', transactionData,
                                 function(error,result) { 

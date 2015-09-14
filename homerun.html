@@ -239,7 +239,7 @@
                 <th class="right">
                     Total
                 </th>
-                <th class="right">{{totalAmount}}</th>
+                <th class="right">{{formatAmount totalAmount}}</th>
             </tr>
         </tfoot>
         <tbody>
@@ -256,7 +256,7 @@
 </template>
 
 <template name="tableBalance">
-    <table class="balance">
+    <table class="transactions balance">
         <thead>
             <tr>
                 <th>
@@ -272,17 +272,17 @@
                 <th class="right">
                     Total
                 </th>
-                <th class="right {{balanceResult}}">{{totalBalance}}</th>
+                <th class="right {{balanceResult}}">{{formatAmount totalBalance}}</th>
             </tr>
         </tfoot>
         <tbody>
             <tr>
                 <td>Ingresos</td>
-                <td class="right">{{totalIncomes}}</td>
+                <td class="right">{{formatAmount totalIncomes}}</td>
             </tr>
             <tr>
                 <td>Gastos</td>
-                <td class="right">{{totalExpenses}}</td>
+                <td class="right">{{formatAmount totalExpenses}}</td>
             </tr>
         </tbody>
     </table>

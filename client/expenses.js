@@ -7,7 +7,16 @@ if (Meteor.isClient) {
     Template.registerHelper('formatPercentage', function(value) {
         return numeral.language('es')(value).format('0.00%');
     });
-    
+
+    Template.registerHelper('formatAmount', function(value) {
+        if(parseFloat(value.replace(',','.')) % 1 === 0) {
+            return value + ",00";
+        }
+        else {
+            return value;
+        }
+    });
+
     Template.expensesByYear.rendered = function() {
     };
     

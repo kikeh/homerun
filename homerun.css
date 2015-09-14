@@ -32,25 +32,25 @@
     text-transform: uppercase;
 }
 
-table {
+table.transactions {
     /* border-collapse: collapse;
        border-spacing: 0;*/
     width: 100%;
     margin-bottom: 50px;
 }
 
-table > thead {
+table.transactions > thead {
     display: table-header-group;
     vertical-align: middle;
     border-color: inherit;
 }
 
-table > thead > tr {
+table.transactions > thead > tr {
     background-color: #D8D8D8;
     height: 30px;
 }
 
-table > thead > tr > th {
+table.transactions > thead > tr > th {
     /* vertical-align: top;
     font-size: 93%;
     padding: 4px 7px 4px 3px;
@@ -61,11 +61,11 @@ table > thead > tr > th {
     vertical-align: middle;
 }
 
-table > tfoot > tr > th {
+table.transactions > tfoot > tr > th {
     padding: 5px;
 }
 
-table > tfoot > tr {
+table.transactions > tfoot > tr {
     background-color: #DDDDDD;
     height: 25px;
 }
@@ -86,32 +86,32 @@ table > tfoot > tr {
     background-color: #F5DDDD !important;
 }
 
-table > tbody > tr > td {
+table.transactions > tbody > tr > td {
     height: 40px;
 }
 
-table > tbody > tr:nth-child(n):hover {
+table.transactions > tbody > tr:nth-child(n):hover {
     background-color: #EEEEF5;
 }
 
-table > tbody > tr:nth-child(even) {
+table.transactions > tbody > tr:nth-child(even) {
     background-color: #F5F5F5;
 }
 
-table > tbody > tr:nth-child(odd) {
+table.transactions > tbody > tr:nth-child(odd) {
     background-color: #EEEEEE;
 }
 
-table > tbody > tr > td {
+table.transactions > tbody > tr > td {
     padding: 5px;
 }
 
-table > tbody > tr > td > a {
+table.transactions > tbody > tr > td > a {
     text-decoration: none;
     color: #468;
 }
 
-table > tbody > tr > td > a:hover {
+table.transactions > tbody > tr > td > a:hover {
     text-decoration: none;
     color: #68A;
 }

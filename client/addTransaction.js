@@ -21,6 +21,13 @@ if (Meteor.isClient) {
         return data;
     };
 
+    var formatAmount = function(value) {
+        var decimalAmount = /^(\d+,\d{2})$/;
+        if(!decimalAmount.test(value)) {
+            value = value + ",00";
+        }
+        return value;
+    }
 
     var getEndDate = function(value) {
         if(value == "Fijo") {
@@ -100,6 +107,7 @@ if (Meteor.isClient) {
             event.preventDefault();
             var transactionData = getTransactionInfo();
             if(dataIsValid(transactionData)){
+                transactionData['amount'] = formatAmount(transactionData['amount']);
                 if(this.type == "expense") {
                     Meteor.call('createExpenseEntry', transactionData,
                                 function(error,result) { 

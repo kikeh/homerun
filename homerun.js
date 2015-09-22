@@ -25,58 +25,45 @@ if (Meteor.isClient) {
                 
     });
 
-    Router.route('expensesByYear', {
-        path: '/expenses/:_year',
-        data: function() {
-            _year = this.params._year;
-            templateData = {
-                year : _year,
-            };
-            return templateData;
+    Router.route('/:_transactionType/:_year', function() {
+        console.log(this.params._transactionType);
+        if(this.params._transactionType == "balance") {
+            this.render('balanceByPeriod',
+                        {
+                            data: { year : this.params._year }
+                        });
+        }
+        else {
+            this.render('transactionsByPeriod',
+                        {
+                            data : {
+                                year : this.params._year,
+                                transactionType: this.params._transactionType
+                            }
+                        });
         }
     });
-
-    Router.route('expensesByMonth', {
-        path: '/expenses/:_year/:_month',
-        data: function() {
-            templateData = {
-                year  : this.params._year,
-                month : this.params._month
-            };
-            return templateData;
+                 
+    Router.route('/:_transactionType/:_year/:_month', function() {
+        if(this.params._transactionType == "balance") {
+            console.log("Balance");
+            this.render('balanceByPeriod',
+                        {
+                            data: {
+                                year : this.params._year,
+                                month : this.params._month
+                            }
+                        });
         }
-    });
-
-    Router.route('incomesByYear', {
-        path: '/incomes/:_year',
-        data: function() {
-            _year = this.params._year;
-            templateData = {
-                year : _year,
-            };
-            return templateData;
-        }
-    });
-
-    Router.route('incomesByMonth', {
-        path: '/incomes/:_year/:_month',
-        data: function() {
-            templateData = {
-                year  : this.params._year,
-                month : this.params._month
-            };
-            return templateData;
-        }
-    });
-
-    Router.route('balanceByYear', {
-        path: '/balance/:_year',
-        data: function() {
-            _year = this.params._year;
-            templateData = {
-                year : _year,
-            };
-            return templateData;
+        else {
+            this.render('transactionsByPeriod',
+                        {
+                            data : {
+                                year  : this.params._year,
+                                month : this.params._month,
+                                transactionType : this.params._transactionType
+                            }
+                        });
         }
     });
 

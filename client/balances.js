@@ -1,15 +1,24 @@
 if (Meteor.isClient) {
+
+    var INCOMES = 'incomes';
+    var EXPENSES = 'expenses';
     
-    Template.registerHelper('formatDate', function(date) {
-        return moment(date).format('YYYY');
-    });
+    var getTransactions = function(transactionType, year, month) {
+        if(transactionType == "expenses")
+            var Transactions = Expenses;
+        else
+            var Transactions = Incomes;
 
-    Template.registerHelper('formatPercentage', function(value) {
-        return numeral.language('es')(value).format('0.00%');
-    });
+        if(month != null)
+            var transactions = Transactions.find({'year' : year, 'month' : month});
+        else
+            var transactions = Transactions.find({'year' : year});
 
+        return transactions;
+    }
+    
     var totalIncomeByYear = function(year) {
-        var incomes = Incomes.find({'year': year}).fetch();
+        var incomes = getTransactions(INCOMES, year).fetch();
         var total = 0;
         _.each(incomes, function(income) {
             total += parseFloat(income.amount.replace(',','.'));
@@ -18,7 +27,7 @@ if (Meteor.isClient) {
     };
 
     var totalExpenseByYear = function(year) {
-        var expenses = Expenses.find({'year': year}).fetch();
+        var expenses = getTransactions(EXPENSES, year).fetch();
         var total = 0;
         _.each(expenses, function(expense) {
             total += parseFloat(expense.amount.replace(',','.'));
@@ -27,7 +36,7 @@ if (Meteor.isClient) {
     };
     
     var totalIncomeByMonth = function(month, year) {
-        var incomes = Incomes.find({'month': month, 'year': year}).fetch();
+        var incomes = getTransactions(INCOMES, year, month).fetch();
         var total = 0;
         _.each(incomes, function(income) {
             total += parseFloat(income.amount.replace(',','.'));
@@ -36,7 +45,7 @@ if (Meteor.isClient) {
     };
 
     var totalExpenseByMonth = function(month, year) {
-        var expenses = Expenses.find({'month': month, 'year': year}).fetch();
+        var expenses = getTransactions(EXPENSES, year, month).fetch();
         var total = 0;
         _.each(expenses, function(expense) {
             total += parseFloat(expense.amount.replace(',','.'));
@@ -46,10 +55,7 @@ if (Meteor.isClient) {
 
     Template.tableBalance.helpers({
         totalBalance: function() {
-            console.log(this.period);
-            console.log(this.month);
-            console.log(this.year);
-            if(this.period == "month") {
+            if(this.month != null) {
                 var totalIncomes = totalIncomeByMonth(this.month, this.year);
                 var totalExpenses = totalExpenseByMonth(this.month, this.year);
             }
@@ -62,21 +68,21 @@ if (Meteor.isClient) {
         },
 
         totalIncomes: function() {
-            if(this.period == "month")
+            if(this.month != null)
                 return (totalIncomeByMonth(this.month, this.year)).toString().replace('.',',');
             else
                 return (totalIncomeByYear(this.year)).toString().replace('.',',');
         },
 
         totalExpenses: function() {
-            if(this.period == "month")
+            if(this.month != null)
                 return (totalExpenseByMonth(this.month, this.year)).toString().replace('.',',');
             else
                 return (totalExpenseByYear(this.year)).toString().replace('.',',');
         },
 
         balanceResult: function() {
-            if(this.period == "month") {
+            if(this.month != null) {
                 var totalIncomes = totalIncomeByMonth(this.month, this.year);
                 var totalExpenses = totalExpenseByMonth(this.month, this.year);
             }
@@ -95,7 +101,7 @@ if (Meteor.isClient) {
         },
         
         empty: function() {
-            if(this.period == "month") {
+            if(this.month != null) {
                 var totalIncomes = totalIncomeByMonth(this.month, this.year);
                 var totalExpenses = totalExpenseByMonth(this.month, this.year);
             }
@@ -132,8 +138,6 @@ if (Meteor.isClient) {
                 return 'Noviembre';
             else if(month == '12')
                 return 'Diciembre';
-        }
-        
-    });
-    
+        } 
+    });    
 }

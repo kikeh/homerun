@@ -142,87 +142,44 @@
     </div>
 </template>
 
-<template name="expensesByYear">
-    <h4>Gastos {{ year }}</h4>
-    {{#if empty}}
-    <h4>No hay gastos en esta fecha</h4>
+<template name="transactionsByPeriod">
+    {{#if monthly}}
+    <h4>{{transactionName}} {{ monthName }} <a href="/expenses/{{year}}">{{ year }}</a></h4>
     {{else}}
-    {{> tableTransactions transactions=yearExpenses totalAmount=totalAmount}}
+    <h4>{{transactionName}} {{ year }}</h4>
+    {{/if}}
+    {{#if empty}}
+    <h4>No hay datos en esta fecha</h4>
+    {{else}}
+    {{> tableTransactions transactions=transactions  totalAmount=totalAmount}}
     {{/if}}
 </template>
 
-<template name="expensesByMonth">
-    <h4>Gastos {{ monthName }} <a href="/expenses/{{year}}">{{ year }}</a></h4>
-    {{#if empty}}
-    <h4>No hay gastos en esta fecha</h4>
-    {{else}}
-    {{> tableTransactions transactions=monthExpenses totalAmount=totalAmount}}
-    {{/if}}
-</template>
-
-<template name="incomesByYear">
-    <h4>Ingresos {{ year }}</h4>
-    {{#if empty}}
-    <h4>No hay ingresos en esta fecha</h4>
-    {{else}}
-    {{> tableTransactions transactions=yearIncomes totalAmount=totalAmount}}
-    {{/if}}
-</template>
-
-<template name="incomesByMonth">
-    <h4>Ingresos {{ monthName }} <a href="/incomes/{{year}}">{{ year }}</a></h4>
-    {{#if empty}}
-    <h4>No hay ingresos en esta fecha</h4>
-    {{else}}
-    {{> tableTransactions transactions=monthIncomes totalAmount=totalAmount}}
-    {{/if}}
-</template>
-
-<template name="balanceTableByYear">
+<template name="balanceTableByPeriod">
     <h4>Balance</h4>
     {{#if empty}}
-    <h4>No hay ingresos ni gastos en esta fecha</h4>
+    <h4>No hay datos en esta fecha</h4>
     {{else}}
-    {{> tableBalance period='year' month=month year=year }}
+    {{> tableBalance month=month year=year }}
     {{/if}}
 </template>
 
-<template name="balanceTableByMonth">
-    <h4>Balance</h4>
-    {{#if empty}}
-    <h4>No hay ingresos ni gastos en esta fecha</h4>
-    {{else}}
-    {{> tableBalance period='month' month=month year=year }}
-    {{/if}}
-</template>
-
-<template name="balanceByYear">
+<template name="balanceByPeriod">
     <div class="row">
-        <h2>Balance {{year}}</h2>
-    </div>
-    <div class="row">
-        {{> expensesByYear}}
-    </div>
-    <div class="row">
-        {{> incomesByYear}}
-    </div>
-    <div class="row">
-        {{> balanceTableByYear}}
-    </div>
-</template>
-
-<template name="balanceByMonth">
-    <div class="row">
+        {{#if monthly}}
         <h2>Balance {{monthName}} <a href="/balance/{{year}}">{{year}}</a></h2>
+        {{else}}
+        <h2>Balance {{year}}</h2>
+        {{/if}}
     </div>
     <div class="row">
-        {{> expensesByMonth}}
+        {{> transactionsByPeriod transactionType='expenses' month=month year=year}}
     </div>
     <div class="row">
-        {{> incomesByMonth}}
+        {{> transactionsByPeriod transactionType='incomes' month=month year=year}}
     </div>
     <div class="row">
-        {{> balanceTableByMonth month=month year=year }}
+        {{> balanceTableByPeriod}}
     </div>
 </template>
 
@@ -251,7 +208,7 @@
                 <th class="right">
                     Total
                 </th>
-                <th class="right">{{formatAmount totalAmount}}</th>
+                <th class="right">{{totalAmount}}</th>
             </tr>
         </tfoot>
         <tbody>
@@ -284,17 +241,17 @@
                 <th class="right">
                     Total
                 </th>
-                <th class="right {{balanceResult}}">{{formatAmount totalBalance}}</th>
+                <th class="right {{balanceResult}}">{{totalBalance}}</th>
             </tr>
         </tfoot>
         <tbody>
             <tr>
                 <td>Ingresos</td>
-                <td class="right">{{formatAmount totalIncomes}}</td>
+                <td class="right">{{totalIncomes}}</td>
             </tr>
             <tr>
                 <td>Gastos</td>
-                <td class="right">{{formatAmount totalExpenses}}</td>
+                <td class="right">{{totalExpenses}}</td>
             </tr>
         </tbody>
     </table>
